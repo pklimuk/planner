@@ -1,6 +1,8 @@
 package com.planner.planner;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "Users")
 @Table(
@@ -51,11 +53,13 @@ public class User {
     )
     private UserProfile user_profile;
 
-//    @OneToOne(fetch = FetchType.LAZY,
-//            cascade =  CascadeType.ALL,
-//            mappedBy = "user")
-//
-//    private UserProfile user_profile;
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Event> events = new ArrayList<>();
 
     public User(String login, String password) {
         this.login = login;
@@ -93,6 +97,28 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void addEvent(Event event) {
+        if (!this.events.contains(event)) {
+            this.events.add(event);
+            event.setUser(this);
+        }
+    }
+
+    public void removeEvent(Event event) {
+        if (this.events.contains(event)) {
+            this.events.remove(event);
+            event.setUser(null);
+        }
+    }
+
+//    public void setUser(User user) {
+//        this.user = studentIdCard;
+//    }
+
+    public List<Event> getEvents() {
+        return events;
     }
 
     @Override
