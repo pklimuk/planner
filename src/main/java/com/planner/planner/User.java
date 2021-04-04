@@ -54,12 +54,20 @@ public class User {
     private UserProfile user_profile;
 
     @OneToMany(
-            mappedBy = "user",
+            mappedBy = "event_user",
             orphanRemoval = true,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
     private List<Event> events = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "deadline_user",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Deadline> deadlines = new ArrayList<>();
 
     public User(String login, String password) {
         this.login = login;
@@ -119,6 +127,28 @@ public class User {
 
     public List<Event> getEvents() {
         return events;
+    }
+
+    public void addDeadline(Deadline deadline) {
+        if (!this.deadlines.contains(deadline)) {
+            this.deadlines.add(deadline);
+            deadline.setUser(this);
+        }
+    }
+
+    public void removeDeadline(Deadline deadline) {
+        if (this.deadlines.contains(deadline)) {
+            this.deadlines.remove(deadline);
+            deadline.setUser(null);
+        }
+    }
+
+//    public void setUser(User user) {
+//        this.user = studentIdCard;
+//    }
+
+    public List<Deadline> getDeadlines() {
+        return deadlines;
     }
 
     @Override

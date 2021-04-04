@@ -19,16 +19,17 @@ public class PlannerApplication {
 
 	@Bean
 	CommandLineRunner commandLineRunner(
-			UserProfileRepository userProfileRepository,
-			UserRepository userRepository, EventRepository eventRepository) {
+			UserProfileRepository userProfileRepository, UserRepository userRepository,
+			EventRepository eventRepository, DeadlineRepository deadlineRepository) {
 
-		return args -> {generateRandomUserProfiles(userProfileRepository, userRepository, eventRepository);};
+		return args -> {generateRandomUserProfiles(userProfileRepository, userRepository, eventRepository, deadlineRepository);};
 //		eventRepository.deleteById(5L);};
 	}
 
-	private void generateRandomUserProfiles(UserProfileRepository userProfileRepository, UserRepository userRepository, EventRepository eventRepository) {
+	private void generateRandomUserProfiles(UserProfileRepository userProfileRepository, UserRepository userRepository,
+											EventRepository eventRepository, DeadlineRepository deadlineRepository) {
 		Faker faker = new Faker();
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 10; i++) {
 			String firstName = faker.name().firstName();
 			String lastName = faker.name().lastName();
 			String email = String.format("%s.%s@amigoscode.edu", firstName, lastName);
@@ -59,6 +60,14 @@ public class PlannerApplication {
 				user.addEvent(new_event);
 			}
 
+			for (int a = 0; a < faker.number().numberBetween(1, 3); a++) {
+				String deadline_title = faker.color().name();
+				LocalDateTime deadline_time = LocalDateTime.now().plusHours(faker.number().numberBetween(1, 10));
+				String deadline_description = faker.company().name();
+				String deadline_group = faker.company().name();
+				Deadline new_deadline = new Deadline(deadline_title, deadline_time, deadline_description, deadline_group);
+				user.addDeadline(new_deadline);
+			}
 			userRepository.save(user);
 		}
 
