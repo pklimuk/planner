@@ -23,8 +23,8 @@ public class UserProfile {
             generator = "user_profile_sequence"
     )
     @Column(
-            name = "id",
-            updatable = false
+            name = "id"
+//            updatable = false
     )
     private Long id;
 
@@ -55,12 +55,12 @@ public class UserProfile {
     )
     private LocalDate dob;
 
-//    @OneToOne(
-//            mappedBy = "user_profile",
-//            orphanRemoval = true
-////            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
-//    )
-//
+    @OneToOne(
+            mappedBy = "user_profile",
+            orphanRemoval = true
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private User user;
 //    @OneToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "user_id", nullable = false)
 //
