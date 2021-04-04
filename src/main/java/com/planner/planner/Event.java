@@ -67,10 +67,10 @@ public class Event {
             nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(
-                    name = "user_id_fk"
+                    name = "event_user_id_fk"
             )
     )
-    private User user;
+    private User event_user;
 
     public Event() {
     }
@@ -132,11 +132,11 @@ public class Event {
     }
 
     public User getUser() {
-        return user;
+        return event_user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User event_user) {
+        this.event_user = event_user;
     }
 
     @Override
@@ -148,7 +148,7 @@ public class Event {
                 ", end=" + end +
                 ", description='" + description + '\'' +
                 ", group='" + group + '\'' +
-                ", user=" + user +
+                ", user=" + event_user +
                 '}';
     }
 }
