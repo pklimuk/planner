@@ -1,7 +1,8 @@
-package com.planner.planner;
+package com.planner.planner.event;
+
+import com.planner.planner.user.User;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "Users_Events")

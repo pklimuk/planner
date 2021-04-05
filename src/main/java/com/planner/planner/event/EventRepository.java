@@ -1,5 +1,6 @@
-package com.planner.planner;
+package com.planner.planner.event;
 
+import com.planner.planner.event.Event;
 import org.springframework.data.repository.CrudRepository;
 
 public interface EventRepository extends CrudRepository<Event, Long> {
