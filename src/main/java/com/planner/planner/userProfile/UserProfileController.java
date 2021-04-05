@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping(path = "api/v1")
+@RequestMapping(path = "api/userprofile")
 public class UserProfileController {
 
     private final UserProfileService userProfileService;
