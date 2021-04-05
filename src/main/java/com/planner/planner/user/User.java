@@ -1,4 +1,8 @@
-package com.planner.planner;
+package com.planner.planner.user;
+
+import com.planner.planner.deadline.Deadline;
+import com.planner.planner.event.Event;
+import com.planner.planner.userProfile.UserProfile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
