@@ -1,4 +1,6 @@
-package com.planner.planner;
+package com.planner.planner.userProfile;
+
+import com.planner.planner.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
