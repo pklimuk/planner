@@ -1,6 +1,14 @@
 package com.planner.planner;
 
 import com.github.javafaker.Faker;
+import com.planner.planner.deadline.Deadline;
+import com.planner.planner.deadline.DeadlineRepository;
+import com.planner.planner.event.Event;
+import com.planner.planner.event.EventRepository;
+import com.planner.planner.user.User;
+import com.planner.planner.user.UserRepository;
+import com.planner.planner.userProfile.UserProfile;
+import com.planner.planner.userProfile.UserProfileRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @SpringBootApplication
 public class PlannerApplication {
@@ -45,7 +52,7 @@ public class PlannerApplication {
 					email,
 					dob);
 
-			com.planner.planner.User user = new User(
+			User user = new User(
 					login,
 					password,
 					userProfile
