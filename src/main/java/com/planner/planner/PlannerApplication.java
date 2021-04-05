@@ -39,7 +39,7 @@ public class PlannerApplication {
 		for (int i = 0; i < 10; i++) {
 			String firstName = faker.name().firstName();
 			String lastName = faker.name().lastName();
-			String email = String.format("%s.%s@amigoscode.edu", firstName, lastName);
+			String email = String.format("%s.%s@pw.edu.pl", firstName, lastName);
 			Integer year = faker.number().numberBetween(1950, 2020);
 			Integer month = faker.number().numberBetween(1, 12);
 			Integer day = faker.number().numberBetween(1, 27);
