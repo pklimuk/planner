@@ -1,6 +1,8 @@
 package com.planner.planner.userProfile;
 
 import com.planner.planner.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -57,6 +59,7 @@ public class UserProfile {
     )
     private LocalDate dob;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(
             mappedBy = "user_profile",
             orphanRemoval = true,

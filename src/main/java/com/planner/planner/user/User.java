@@ -3,6 +3,8 @@ package com.planner.planner.user;
 import com.planner.planner.deadline.Deadline;
 import com.planner.planner.event.Event;
 import com.planner.planner.userProfile.UserProfile;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ public class User {
     )
     private String password;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "user_profile_id",
@@ -57,6 +60,7 @@ public class User {
     )
     private UserProfile user_profile;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(
             mappedBy = "event_user",
             orphanRemoval = true,
@@ -65,6 +69,7 @@ public class User {
     )
     private List<Event> events = new ArrayList<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(
             mappedBy = "deadline_user",
             orphanRemoval = true,

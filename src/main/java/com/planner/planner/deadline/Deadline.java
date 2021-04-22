@@ -1,6 +1,8 @@
 package com.planner.planner.deadline;
 
 import com.planner.planner.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -55,6 +57,7 @@ public class Deadline {
     )
     private String group;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(
             name = "user_id",
