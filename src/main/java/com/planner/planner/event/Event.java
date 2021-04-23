@@ -1,11 +1,14 @@
 package com.planner.planner.event;
 
+import com.planner.planner.group.Group;
 import com.planner.planner.user.User;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Users_Events")
 @Table(
@@ -25,7 +28,7 @@ public class Event {
     )
 
     @Column(
-            name = "id",
+            name = "event_id",
             updatable = false
     )
     private Long id;
@@ -57,12 +60,6 @@ public class Event {
     )
     private String description;
 
-    @Column(
-            name = "event_group",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
-    private String group;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
@@ -76,15 +73,17 @@ public class Event {
     )
     private User event_user;
 
+    @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
+    private Set<Group> groups = new HashSet<>();
+
     public Event() {
     }
 
-    public Event(String title, LocalDateTime start, LocalDateTime end, String description, String group) {
+    public Event(String title, LocalDateTime start, LocalDateTime end, String description) {
         this.title = title;
         this.start = start;
         this.end = end;
         this.description = description;
-        this.group = group;
     }
 
     public Long getId() {
@@ -127,20 +126,20 @@ public class Event {
         this.description = description;
     }
 
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
     public User getUser() {
         return event_user;
     }
 
     public void setUser(User event_user) {
         this.event_user = event_user;
+    }
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 
     @Override
@@ -151,8 +150,7 @@ public class Event {
                 ", start=" + start +
                 ", end=" + end +
                 ", description='" + description + '\'' +
-                ", group='" + group + '\'' +
-                ", user=" + event_user +
+                ", event_user=" + event_user +
                 '}';
     }
 }

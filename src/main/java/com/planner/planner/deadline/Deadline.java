@@ -1,11 +1,14 @@
 package com.planner.planner.deadline;
 
+import com.planner.planner.group.Group;
 import com.planner.planner.user.User;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Users_Deadlines")
 @Table(
@@ -25,7 +28,7 @@ public class Deadline {
     )
 
     @Column(
-            name = "id",
+            name = "deadline_id",
             updatable = false
     )
     private Long id;
@@ -50,13 +53,6 @@ public class Deadline {
     )
     private String description;
 
-    @Column(
-            name = "deadline_group",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
-    private String group;
-
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(
@@ -69,15 +65,16 @@ public class Deadline {
     )
     private User deadline_user;
 
+    @ManyToMany(mappedBy = "deadlines", fetch = FetchType.LAZY)
+    private Set<Group> groups = new HashSet<>();
 
     public Deadline() {
     }
 
-    public Deadline(String title, LocalDateTime deadline_time, String description, String group) {
+    public Deadline(String title, LocalDateTime deadline_time, String description) {
         this.title = title;
         this.deadline_time = deadline_time;
         this.description = description;
-        this.group = group;
     }
 
     public Long getId() {
@@ -112,20 +109,20 @@ public class Deadline {
         this.description = description;
     }
 
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
     public User getUser() {
         return deadline_user;
     }
 
     public void setUser(User deadline_user) {
         this.deadline_user = deadline_user;
+    }
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 
     @Override
@@ -135,8 +132,7 @@ public class Deadline {
                 ", title='" + title + '\'' +
                 ", deadline_time=" + deadline_time +
                 ", description='" + description + '\'' +
-                ", group='" + group + '\'' +
-                ", user=" + deadline_user +
+                ", deadline_user=" + deadline_user +
                 '}';
     }
 }
