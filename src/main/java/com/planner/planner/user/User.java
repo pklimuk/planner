@@ -130,10 +130,6 @@ public class User {
         }
     }
 
-//    public void setUser(User user) {
-//        this.user = studentIdCard;
-//    }
-
     public List<Event> getEvents() {
         return events;
     }
@@ -152,9 +148,13 @@ public class User {
         }
     }
 
-//    public void setUser(User user) {
-//        this.user = studentIdCard;
-//    }
+    public UserProfile getUser_profile() {
+        return user_profile;
+    }
+
+    public void setUser_profile(UserProfile user_profile) {
+        this.user_profile = user_profile;
+    }
 
     public List<Deadline> getDeadlines() {
         return deadlines;
