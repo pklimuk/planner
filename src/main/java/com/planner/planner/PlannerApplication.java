@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 public class PlannerApplication {
@@ -96,5 +97,30 @@ public class PlannerApplication {
 			user_group.getDeadlines().addAll(user_deadlins);
 			groupRepository.save(user_group);
 		}
+
+		String firstName = faker.name().firstName();
+		String lastName = faker.name().lastName();
+		String email = String.format("%s.%s@pw.edu.pl", firstName, lastName);
+		Integer year = faker.number().numberBetween(1950, 2020);
+		Integer month = faker.number().numberBetween(1, 12);
+		Integer day = faker.number().numberBetween(1, 27);
+		LocalDate dob = LocalDate.of(year, month, day);
+		String login = faker.crypto().md5();
+		String password = faker.country().name();
+		UserProfile userProfile = new UserProfile(
+				firstName,
+				lastName,
+				email,
+				dob);
+		userProfileRepository.save(userProfile);
+
+//	User my_user = userRepository.findById(1L).get();
+//	List<Event> user_events = my_user.getEvents();
+//	List<Deadline> user_deadlines = my_user.getDeadlines();
+//////		List<Group> user_groups = my_user.get
+////		for (var i : user_events
+////			 ) { System.out.println(i.toString()); }
+////		System.out.println(user_deadlines);
 	}
+
 }
