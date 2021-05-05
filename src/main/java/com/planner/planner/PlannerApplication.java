@@ -9,6 +9,7 @@ import com.planner.planner.group.Group;
 import com.planner.planner.group.GroupRepository;
 import com.planner.planner.user.User;
 import com.planner.planner.user.UserRepository;
+import com.planner.planner.user.UserRole;
 import com.planner.planner.userProfile.UserProfile;
 import com.planner.planner.userProfile.UserProfileRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -60,6 +61,7 @@ public class PlannerApplication {
 			LocalDate dob = LocalDate.of(year, month, day);
 			String login = faker.crypto().md5();
 			String password = faker.country().name();
+			UserRole userRole = UserRole.USER;
 			UserProfile userProfile = new UserProfile(
 					firstName,
 					lastName,
@@ -69,6 +71,7 @@ public class PlannerApplication {
 			User user = new User(
 					login,
 					password,
+					userRole,
 					userProfile
 			);
 			//Creating an event
