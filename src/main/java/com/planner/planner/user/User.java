@@ -3,13 +3,24 @@ package com.planner.planner.user;
 import com.planner.planner.deadline.Deadline;
 import com.planner.planner.event.Event;
 import com.planner.planner.userProfile.UserProfile;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+@EqualsAndHashCode
+@Getter
+@Setter
 @Entity(name = "Users")
 @Table(
         name = "users",
@@ -18,7 +29,7 @@ import java.util.List;
                         name = "user_login_unique", columnNames = "login")
         }
 )
-public class User {
+public class User implements UserDetails {
 
     @Id
     @SequenceGenerator(
@@ -49,6 +60,11 @@ public class User {
     )
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole = UserRole.USER;
+    private Boolean locked = false;
+    private Boolean enabled = false;
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
@@ -78,9 +94,10 @@ public class User {
     )
     private List<Deadline> deadlines = new ArrayList<>();
 
-    public User(String login, String password) {
+    public User(String login, String password, UserRole userRole) {
         this.login = login;
         this.password = password;
+        this.userRole = userRole;
     }
 
     public User(String login, String password, UserProfile user_profile) {
@@ -89,7 +106,51 @@ public class User {
         this.user_profile = user_profile;
     }
 
+    public User(String login, String password, UserRole userRole, UserProfile user_profile) {
+        this.login = login;
+        this.password = password;
+        this.user_profile = user_profile;
+        this.userRole = userRole;
+    }
+
     public User() {
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority(userRole.name());
+        return Collections.singletonList(authority);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
     }
 
     public Long getId() {
@@ -106,10 +167,6 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {

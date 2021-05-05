@@ -38,6 +38,7 @@ public class UserController {
         LocalDate dob = LocalDate.parse(objectNode.get("dob").asText());
         String login = objectNode.get("login").asText();
         String password = objectNode.get("password").asText();
-        userService.addNewUser(firstName, lastName, email, dob, login, password);
+        UserRole userRole = UserRole.USER;
+        userService.addNewUser(firstName, lastName, email, dob, login, password, userRole);
     }
 }
