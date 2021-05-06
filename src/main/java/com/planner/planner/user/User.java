@@ -63,7 +63,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole userRole = UserRole.USER;
     private Boolean locked = false;
-    private Boolean enabled = false;
+
+    // TODO: Change user parameter to FALSE after development tests
+    private Boolean enabled = true;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(cascade = CascadeType.ALL)
