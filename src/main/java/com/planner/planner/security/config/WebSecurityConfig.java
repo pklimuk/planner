@@ -17,10 +17,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.SecretKey;
+import java.util.Arrays;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Configuration
@@ -68,15 +74,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .deleteCookies("JSESSIONID")
 //                    .logoutSuccessUrl("/logout");
 //
+                .cors().configurationSource(request -> {
+                    var cors = new CorsConfiguration();
+                    cors.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:8080"));
+                    cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
+                    cors.setAllowedHeaders(List.of("*"));
+                    return cors;
+                }).and()
                 .csrf().disable()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig),JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
-//                .antMatchers("/api/registration/**", "http://localhost:3000/users")
-                .antMatchers("/", "index", "/css/*", "/js/*", "/api/registration/**", "http://localhost:3000/users")
+                .antMatchers("/", "index", "/api/registration/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
