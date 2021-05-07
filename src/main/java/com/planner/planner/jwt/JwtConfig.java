@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 //@Configuration
-@ConfigurationProperties(prefix = "application")
+@ConfigurationProperties(prefix = "application.jwt")
 @Component
 public class JwtConfig {
 
