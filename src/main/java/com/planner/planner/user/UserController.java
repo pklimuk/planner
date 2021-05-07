@@ -22,9 +22,9 @@ public class UserController {
     }
 
 
-    @GetMapping
-    public User simple_func(){
-        String user_login = userService.getLoggedUserUserName();
-        return userService.getUserByUsername(user_login);
-    }
+//    @GetMapping
+//    public User simple_func(){
+//        String user_login = userService.getLoggedUserUserName();
+//        return userService.getUserByUsername(user_login);
+//    }
 }
