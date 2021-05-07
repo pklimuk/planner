@@ -7,6 +7,9 @@ import com.planner.planner.userProfile.UserProfile;
 import com.planner.planner.userProfile.UserProfileRepository;
 import com.planner.planner.userProfile.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -90,30 +93,23 @@ public class UserService implements UserDetailsService {
         return userRepository.enableUser(login);
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
-
-    public void addNewUser(String firstName, String lastName, String email, LocalDate dob,
-                           String login, String password, UserRole userRole) {
-        Optional<User> userOptional =
-                userRepository.findUserByLogin(login);
-        Optional<UserProfile> userProfileOptional =
-                userProfileRepository.findUserProfileByEmail(email);
-        if (userProfileOptional.isPresent()){
-            throw new IllegalStateException("This email has been already registered");
+    public String getLoggedUserUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            return currentUserName;
         }
-        else if (userOptional.isPresent()){
-            throw new IllegalStateException("The user with such login has been already registered");
-        }
-        else {
-            UserProfile userProfile = new UserProfile(firstName, lastName, email, dob);
-            User user = new User(login, password, userRole, userProfile);
-            userRepository.save(user);
+        else{
+            return "There is no logged in user";
         }
     }
 
+    public User getUserByUsername(String login){
+        Optional<User> userOptional = userRepository.findUserByLogin(login);
+        return userRepository.getOne(userOptional.get().getId());
+    }
 
+    // TODO: Implement Deletion
 
 //    public void deleteUser(Long userId) {
 //        boolean exists = userRepository.existsById(userId);
@@ -128,4 +124,6 @@ public class UserService implements UserDetailsService {
 //            userRepository.deleteById(userId);
 //        }
 //    }
+
+
 }
