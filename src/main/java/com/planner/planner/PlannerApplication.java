@@ -45,8 +45,11 @@ public class PlannerApplication {
 	private void generateRandomUserProfiles(UserProfileRepository userProfileRepository, UserRepository userRepository,
 											EventRepository eventRepository, DeadlineRepository deadlineRepository,
 											GroupRepository groupRepository) {
+
+		Integer number_of_users = 0;
+
 		Faker faker = new Faker();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < number_of_users; i++) {
 			//Creating group
 			String group_name = faker.company().name();
 			String group_description = faker.animal().name();
