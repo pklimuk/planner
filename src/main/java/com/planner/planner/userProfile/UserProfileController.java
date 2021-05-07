@@ -1,12 +1,16 @@
 package com.planner.planner.userProfile;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
 @RequestMapping(path = "api/userprofile")
 public class UserProfileController {
@@ -16,6 +20,19 @@ public class UserProfileController {
     @Autowired
     public UserProfileController(UserProfileService userProfileService) {
         this.userProfileService = userProfileService;
+    }
+
+    // TODO: Delete test_func after tests
+    @GetMapping("/test")
+    public String test_func() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserName = authentication.getName();
+            return currentUserName;
+        }
+        else{
+            return "There is no logged in user";
+        }
     }
 
     @GetMapping
