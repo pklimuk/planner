@@ -10,7 +10,8 @@ spring:
     username: planner
   jpa:
     hibernate:
-      ddl-auto: create-drop
+#      TODO: Change after tests
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
