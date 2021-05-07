@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     cors.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:8080"));
                     cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
                     cors.setAllowedHeaders(List.of("*"));
+                    cors.setExposedHeaders(List.of("*"));
                     return cors;
                 }).and()
                 .csrf().disable()
