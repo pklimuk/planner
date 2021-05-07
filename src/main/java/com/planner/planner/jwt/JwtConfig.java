@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class JwtConfig {
 
     private String secretKey = "securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure";
-    private String tokenPrefix = "Bearer";
+    private String tokenPrefix = "Bearer ";
     private Integer tokenExpirationAfterDays = 10;
 
     public JwtConfig() {
