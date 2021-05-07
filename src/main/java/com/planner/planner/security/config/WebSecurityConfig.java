@@ -28,7 +28,8 @@ import javax.crypto.SecretKey;
 import java.util.Arrays;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
+
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
@@ -90,10 +91,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig),JwtUsernameAndPasswordAuthenticationFilter.class)
                 .authorizeRequests()
+
+                // TODO: Change after testing
+//                .antMatchers("/", "index", "/api/registration/**", "/api/userprofile/**")
                 .antMatchers("/", "index", "/api/registration/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
+//                .and()
+//                .logout();
     }
 
     @Override
