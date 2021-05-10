@@ -109,6 +109,15 @@ public class PlannerApplication {
 			user_group.getDeadlines().addAll(user_deadlins);
 			groupRepository.save(user_group);
 		}
+//
+//	User my_user = userRepository.getOne(11L);
+//	String group_name = "My_group";
+//	String group_description = "My_group description";
+//	Group user_group = new Group(group_name, group_description);
+//	my_user.addGroup(user_group);
+//	userRepository.save(my_user);
+
+
 
 //		String firstName = faker.name().firstName();
 //		String lastName = faker.name().lastName();
@@ -126,13 +135,6 @@ public class PlannerApplication {
 //				dob);
 //		userProfileRepository.save(userProfile);
 
-
-//	String group_name = "My_group";
-//	String group_description = "My_group description";
-//	Group user_group = new Group(group_name, group_description);
-//	groupRepository.save(user_group);
-//	deadlineRepository.getOne(25L).setGroups(<user_group>);
-//
 
 
 //	User my_user = userRepository.findById(1L).get();

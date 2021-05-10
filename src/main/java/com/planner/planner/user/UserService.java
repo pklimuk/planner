@@ -1,5 +1,6 @@
 package com.planner.planner.user;
 
+import com.planner.planner.group.Group;
 import com.planner.planner.group.GroupRepository;
 import com.planner.planner.registration.token.ConfirmationToken;
 import com.planner.planner.registration.token.ConfirmationTokenService;
@@ -107,6 +108,12 @@ public class UserService implements UserDetailsService {
     public User getUserByUsername(String login){
         Optional<User> userOptional = userRepository.findUserByLogin(login);
         return userRepository.getOne(userOptional.get().getId());
+    }
+
+    public List<Group> getUsersGroups(){
+        User user = getUserByUsername(getLoggedUserUserName());
+        List<Group> users_groups = user.getGroups();
+        return users_groups;
     }
 
     // TODO: Implement Deletion

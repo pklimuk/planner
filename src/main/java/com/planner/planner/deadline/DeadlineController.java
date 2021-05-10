@@ -1,8 +1,12 @@
 package com.planner.planner.deadline;
 
+import antlr.collections.impl.IntRange;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.planner.planner.group.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.ranges.Range;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,19 +31,24 @@ public class DeadlineController {
 //        String lastName = objectNode.get("lastName").asText();
 
 
+//    @GetMapping("/test")
+//    public List<Deadline> test_func(String title){
+//        List<Deadline> user_deadlines = new ArrayList<>();
+//        for (var deadline: deadlineService.test_func("Second deadline")){
+//            Deadline new_deadline = new Deadline();
+//            new_deadline.setId(deadline.get().getId());
+//            new_deadline.setTitle(deadline.get().getTitle());
+//            new_deadline.setDeadline_time(deadline.get().getDeadline_time());
+//            new_deadline.setDescription(deadline.get().getDescription());
+//            new_deadline.setGroups(deadline.get().getGroups());
+//            user_deadlines.add(new_deadline);
+//        }
+//        return user_deadlines;
+//    }
+
     @GetMapping("/test")
-    public List<Deadline> test_func(String title){
-        List<Deadline> user_deadlines = new ArrayList<>();
-        for (var deadline: deadlineService.test_func("Second deadline")){
-            Deadline new_deadline = new Deadline();
-            new_deadline.setId(deadline.get().getId());
-            new_deadline.setTitle(deadline.get().getTitle());
-            new_deadline.setDeadline_time(deadline.get().getDeadline_time());
-            new_deadline.setDescription(deadline.get().getDescription());
-            new_deadline.setGroups(deadline.get().getGroups());
-            user_deadlines.add(new_deadline);
-        }
-        return user_deadlines;
+    public void test_func2(){
+        deadlineService.test_func_2("My_group 2", "Simple Description");
     }
 
     @DeleteMapping
@@ -67,8 +76,23 @@ public class DeadlineController {
     }
 
     @PostMapping
-    public void addNewDeadline(@RequestBody Deadline deadline) {
-        deadlineService.addNewDeadline(deadline);
+    public void addNewDeadline(@RequestBody ObjectNode objectNode) {
+//        String title = objectNode, LocalDateTime time, String description, List<String> list_of_group_titles
+        String title = objectNode.get("title").asText();
+        LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
+        String description = objectNode.get("description").asText();
+        List<String> list_of_group_titles = new ArrayList<>();
+        Integer i = 0;
+        if (objectNode.get("groups") != null) {
+            System.out.println("IM IN THE IF LOOP");
+            while (i < objectNode.get("groups").size()) {
+                System.out.println("IM IN THE WHILE LOOP");
+                list_of_group_titles.add(objectNode.get("groups").get(i).asText());
+                i += 1;
+            }
+        }
+        System.out.println("IM HAVE SENT DEADLINE TO SERVICE");
+        deadlineService.addNewDeadline(title, time, description, list_of_group_titles);
     }
 
     @PutMapping
