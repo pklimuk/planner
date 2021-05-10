@@ -2,6 +2,9 @@ package com.planner.planner.group;
 
 import com.planner.planner.deadline.Deadline;
 import com.planner.planner.event.Event;
+import com.planner.planner.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -59,6 +62,18 @@ public class Group {
     public Group() {
     }
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(
+                    name = "group_user_id_fk"
+            )
+    )
+    private User group_user;
+
     public Group(String group_name) {
         this.group_name = group_name;
     }
@@ -106,6 +121,14 @@ public class Group {
 
     public void setDeadlines(Set<Deadline> deadlines) {
         this.deadlines = deadlines;
+    }
+
+    public User getUser() {
+        return group_user;
+    }
+
+    public void setUser(User group_user) {
+        this.group_user = group_user;
     }
 
     @Override

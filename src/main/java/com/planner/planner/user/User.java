@@ -2,6 +2,7 @@ package com.planner.planner.user;
 
 import com.planner.planner.deadline.Deadline;
 import com.planner.planner.event.Event;
+import com.planner.planner.group.Group;
 import com.planner.planner.userProfile.UserProfile;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -95,6 +96,15 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY
     )
     private List<Deadline> deadlines = new ArrayList<>();
+
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(
+            mappedBy = "group_user",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Group> groups = new ArrayList<>();
 
     public User(String login, String password, UserRole userRole) {
         this.login = login;
@@ -217,6 +227,28 @@ public class User implements UserDetails {
 
     public List<Deadline> getDeadlines() {
         return deadlines;
+    }
+
+    public void addGroup(Group group) {
+        if (!this.groups.contains(group)) {
+            this.groups.add(group);
+            group.setUser(this);
+        }
+    }
+
+    public void removeGroup(Group group) {
+        if (this.groups.contains(groups)) {
+            this.groups.remove(group);
+            group.setUser(null);
+        }
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override
