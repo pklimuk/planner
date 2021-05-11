@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeadlineRepository extends JpaRepository<Deadline, Long> {
-    @Query("SELECT up FROM Users_Deadlines up WHERE up.title = ?1")
-    Optional<Deadline> findDeadlineByTitle(String title);
+    @Query("SELECT up FROM Users_Deadlines up WHERE up.title = ?1 and up.deadline_user.id = ?2")
+    Optional<Deadline> findDeadlineByTitleAndUserId(String title, Long user_id);
 
-    @Query("SELECT up FROM Users_Deadlines up WHERE up.title = ?1")
-    List<Optional<Deadline>> findListOfDeadlineByTitle(String title);
+    @Query("SELECT up FROM Users_Deadlines up WHERE up.title = ?1 and up.deadline_user.id = ?2")
+    List<Optional<Deadline>> findListOfDeadlineByTitleAndUserId(String title, Long user_id);
 }

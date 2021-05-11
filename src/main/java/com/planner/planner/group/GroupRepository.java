@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
-    @Query("SELECT up FROM Groups up WHERE up.group_name = ?1")
-    Optional<Group> findGroupByName(String name);
-
-    @Query("SELECT up FROM Groups up WHERE up.group_name = ?1")
-    List<Optional<Group>>  findListOfGroupsByName(String name);
+    @Query("SELECT up FROM Groups up WHERE up.group_name = ?1 and up.group_user.id = ?2")
+    Optional<Group> findGroupByNameAndUserId(String name, Long user_id);
 }

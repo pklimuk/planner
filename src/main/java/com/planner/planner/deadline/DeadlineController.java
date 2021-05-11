@@ -68,7 +68,10 @@ public class DeadlineController {
                 new_deadline.setTitle(deadline.getTitle());
                 new_deadline.setDeadline_time(deadline.getDeadline_time());
                 new_deadline.setDescription(deadline.getDescription());
-                new_deadline.setGroups(deadline.getGroups());
+                for (var group: deadline.getGroups()){
+                    Group new_group = new Group(group.getGroup_name(), group.getGroup_description());
+                    new_deadline.getGroups().add(new_group);
+                }
             user_deadlines.add(new_deadline);
         }
 
@@ -84,14 +87,11 @@ public class DeadlineController {
         List<String> list_of_group_titles = new ArrayList<>();
         Integer i = 0;
         if (objectNode.get("groups") != null) {
-            System.out.println("IM IN THE IF LOOP");
             while (i < objectNode.get("groups").size()) {
-                System.out.println("IM IN THE WHILE LOOP");
                 list_of_group_titles.add(objectNode.get("groups").get(i).asText());
                 i += 1;
             }
         }
-        System.out.println("IM HAVE SENT DEADLINE TO SERVICE");
         deadlineService.addNewDeadline(title, time, description, list_of_group_titles);
     }
 

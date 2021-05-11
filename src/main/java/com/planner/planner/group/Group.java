@@ -52,6 +52,7 @@ public class Group {
             inverseJoinColumns = @JoinColumn(name = "event_id", nullable = false, updatable = false))
     private Set<Event> events = new HashSet<>();
 
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "deadline_group",
@@ -130,6 +131,7 @@ public class Group {
     public void setUser(User group_user) {
         this.group_user = group_user;
     }
+
 
     @Override
     public String toString() {
