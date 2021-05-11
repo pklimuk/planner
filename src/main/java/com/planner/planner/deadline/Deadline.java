@@ -2,12 +2,17 @@ package com.planner.planner.deadline;
 
 import com.planner.planner.group.Group;
 import com.planner.planner.user.User;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "Users_Deadlines")
@@ -65,8 +70,10 @@ public class Deadline {
     )
     private User deadline_user;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(mappedBy = "deadlines", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
+
 
     public Deadline() {
     }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "Groups")
@@ -140,5 +141,20 @@ public class Group {
                 ", group_name='" + group_name + '\'' +
                 ", group_description='" + group_description + '\'' +
                 '}';
+    }
+
+    // TODO: Check after deadline PUT tests
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return Objects.equals(id, group.id) && Objects.equals(group_name, group.group_name) && Objects.equals(group_description, group.group_description) && Objects.equals(events, group.events) && Objects.equals(deadlines, group.deadlines) && Objects.equals(group_user, group.group_user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, group_name, group_description, events, deadlines, group_user);
     }
 }

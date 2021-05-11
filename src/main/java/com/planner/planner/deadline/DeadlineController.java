@@ -47,8 +47,15 @@ public class DeadlineController {
 //    }
 
     @GetMapping("/test")
-    public void test_func2(){
-        deadlineService.test_func_2("My_group 2", "Simple Description");
+    public void test_func2(@RequestBody ObjectNode objectNode){
+        String title = objectNode.get("title").asText();
+        String description = objectNode.get("description").asText();
+        deadlineService.test_func_2(title, description);
+    }
+
+    @GetMapping("/test3")
+    public void test_func3(){
+        deadlineService.test_func_3();
     }
 
     @DeleteMapping
@@ -101,6 +108,29 @@ public class DeadlineController {
         String title = objectNode.get("title").asText();
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
         String description = objectNode.get("description").asText();
-        deadlineService.updateDeadline(title, time, description);
+        String new_title = null;
+        LocalDateTime new_time = null;
+        String new_description = null;
+        List<String> new_list_of_group_titles = new ArrayList<>();
+        if (objectNode.get("new_title") != null){
+            new_title = objectNode.get("new_title").asText();
+        }
+        if (objectNode.get("new_time") != null){
+            new_time = LocalDateTime.parse(objectNode.get("new_time").asText());
+        }
+        if (objectNode.get("new_description") != null){
+            new_description = objectNode.get("new_description").asText();
+        }
+        Integer i = 0;
+        if (objectNode.get("new_groups") != null){
+            while (i < objectNode.get("new_groups").size()) {
+                new_list_of_group_titles.add(objectNode.get("groups").get(i).asText());
+                i += 1;
+            }
+        }
+        deadlineService.updateDeadline(title, time, description,
+                new_title, new_time, new_description, new_list_of_group_titles);
+//        String new_title, LocalDateTime new_time,
+//                String new_description, List<String> new_list_of_group_titles)
     }
 }
