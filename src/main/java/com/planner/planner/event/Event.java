@@ -73,6 +73,7 @@ public class Event {
     )
     private User event_user;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
 
