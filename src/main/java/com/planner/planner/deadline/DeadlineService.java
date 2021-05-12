@@ -111,7 +111,7 @@ public class DeadlineService {
         }
 
 
-        if (new_list_of_group_titles != null && !new_list_of_group_titles.contains("DELETE ALL")) {
+        if (new_list_of_group_titles.size() != 0 && !new_list_of_group_titles.contains("CLEAR ALL")) {
             Deadline new_deadline = new Deadline(deadline_to_update.getTitle(), deadline_to_update.getDeadline_time(),
                     deadline_to_update.getDescription());
             new_deadline.setUser(deadline_to_update.getUser());
@@ -120,7 +120,7 @@ public class DeadlineService {
             deadlineRepository.save(new_deadline);
         }
 
-        else if (new_list_of_group_titles.size() == 1 && new_list_of_group_titles.contains("DELETE ALL")){
+        else if (new_list_of_group_titles.size() == 1 && new_list_of_group_titles.contains("CLEAR ALL")){
             Deadline new_deadline = new Deadline(deadline_to_update.getTitle(), deadline_to_update.getDeadline_time(),
                     deadline_to_update.getDescription());
             new_deadline.setUser(deadline_to_update.getUser());

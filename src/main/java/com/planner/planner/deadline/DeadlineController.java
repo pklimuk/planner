@@ -103,7 +103,7 @@ public class DeadlineController {
     }
 
     @PutMapping
-    public void updateUerProfile(@RequestBody ObjectNode objectNode) {
+    public void updateDeadline(@RequestBody ObjectNode objectNode) {
 
         String title = objectNode.get("title").asText();
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
