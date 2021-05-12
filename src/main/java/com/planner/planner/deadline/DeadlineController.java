@@ -92,8 +92,8 @@ public class DeadlineController {
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
         String description = objectNode.get("description").asText();
         List<String> list_of_group_titles = new ArrayList<>();
-        Integer i = 0;
         if (objectNode.get("groups") != null) {
+            Integer i = 0;
             while (i < objectNode.get("groups").size()) {
                 list_of_group_titles.add(objectNode.get("groups").get(i).asText());
                 i += 1;
@@ -121,16 +121,14 @@ public class DeadlineController {
         if (objectNode.get("new_description") != null){
             new_description = objectNode.get("new_description").asText();
         }
-        Integer i = 0;
         if (objectNode.get("new_groups") != null){
+            Integer i = 0;
             while (i < objectNode.get("new_groups").size()) {
-                new_list_of_group_titles.add(objectNode.get("groups").get(i).asText());
+                new_list_of_group_titles.add(objectNode.get("new_groups").get(i).asText());
                 i += 1;
             }
         }
         deadlineService.updateDeadline(title, time, description,
                 new_title, new_time, new_description, new_list_of_group_titles);
-//        String new_title, LocalDateTime new_time,
-//                String new_description, List<String> new_list_of_group_titles)
     }
 }

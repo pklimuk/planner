@@ -13,85 +13,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
-//@Service
-//public class DeadlineService {
-//
-//    private final DeadlineRepository deadlineRepository;
-//    private final UserService userService;
-//
-//    @Autowired
-//    public DeadlineService(DeadlineRepository deadlineRepository, UserService userService) {
-//        this.deadlineRepository = deadlineRepository;
-//        this.userService = userService;
-//    }
-//
-//    public List<Deadline> getUserDeadlines(){
-//        User deadline_user = userService.getUserByUsername(userService.getLoggedUserUserName());
-//        return deadline_user.getDeadlines();
-//    }
-//
-//    public void addNewDeadline(Deadline deadline){
-//        User deadline_user = userService.getUserByUsername(userService.getLoggedUserUserName());
-//        deadline.setUser(deadline_user);
-//        deadlineRepository.save(deadline);
-//    }
-//
-//    public void deleteDeadline(String title, LocalDateTime time, String description){
-//        List<Optional<Deadline>> list_of_deadlines = deadlineRepository.findListOfDeadlineByTitle(title);
-//        try {
-//            if(list_of_deadlines.size() == 1) {
-//                deadlineRepository.deleteById(list_of_deadlines.get(0).get().getId());
-//            }
-//            if(list_of_deadlines.size() > 1) {
-//                for (var deadline: list_of_deadlines) {
-//                    if (Objects.equals(deadline.get().getDeadline_time(), time)
-//                            & Objects.equals(deadline.get().getDescription(), description)) {
-//                        deadlineRepository.deleteById(list_of_deadlines.get(0).get().getId());
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//        catch (Exception e){
-//            throw new IllegalStateException("Can not delete this deadline");
-//        }
-//    }
-//
-//    @Transactional
-//    public void updateDeadline(String title, LocalDateTime time, String description){
-//        List<Optional<Deadline>> list_of_deadlines = deadlineRepository.findListOfDeadlineByTitle(title);
-//        Deadline deadline_to_update = null;
-//        if(list_of_deadlines.size() == 1) {
-//            deadline_to_update = list_of_deadlines.get(0).get();
-//        }
-//        if(list_of_deadlines.size() > 1) {
-//            for (var deadline: list_of_deadlines) {
-//                if (Objects.equals(deadline.get().getDeadline_time(), time)
-//                        & Objects.equals(deadline.get().getDescription(), description)) {
-//                    deadline_to_update = list_of_deadlines.get(0).get();
-//                    break;
-//                }
-//            }
-//        }
-//
-//
-//        if (title != null && title.length() > 0 && !Objects.equals(deadline_to_update.getTitle(), title)) {
-//            deadline_to_update.setTitle(title);
-//        }
-//        if (time != null && !Objects.equals(deadline_to_update.getDeadline_time(), time)) {
-//            deadline_to_update.setDeadline_time(time);
-//        }
-//        if (!Objects.equals(deadline_to_update.getDescription(), description)) {
-//            deadline_to_update.setDescription(description);
-//        }
-//    }
-//
-//
-//    // TODO: Delete test_func()
-//    public List<Optional<Deadline>> test_func(String title){
-//        return deadlineRepository.findListOfDeadlineByTitle(title);
-//    }
-
 @Service
 public class DeadlineService {
 
@@ -114,34 +35,28 @@ public class DeadlineService {
         return deadline_user.getDeadlines();
     }
 
-//    public void add_groups_from_list_of_string(Deadline deadline_to_update, List<String> list_of_groups_titles, User user) {
-//        Set<Group> deadline_groups = new HashSet<>();
-//        for (var group_title : list_of_groups_titles) {
-//            Group group = groupRepository.findGroupByNameAndUserId(group_title, user.getId()).orElseThrow(() ->
-//                    new IllegalStateException("Group with name " + group_title + " does not exists"));
-//            deadline_groups.add(group);
-////            deadline_to_update.setGroups(deadline_groups);
-//        }
-//        deadline_to_update.setGroups(deadline_groups);
-//        deadlineRepository.save(deadline_to_update);
-//    }
+    public void add_groups_from_list_of_string(Deadline deadline_to_update, List<String> list_of_groups_titles, User user) {
+        Set<Group> deadline_groups = new HashSet<>();
+        for (var group_title : list_of_groups_titles) {
+            Group group = groupRepository.findGroupByNameAndUserId(group_title, user.getId()).orElseThrow(() ->
+                    new IllegalStateException("Group with name " + group_title + " does not exists"));
+            deadline_groups.add(group);
+            group.getDeadlines().add(deadline_to_update);
+        }
+        deadline_to_update.setGroups(deadline_groups);
+        deadlineRepository.save(deadline_to_update);
+    }
 
     public void addNewDeadline(String title, LocalDateTime time, String description, List<String> list_of_group_titles) {
         User user = userService.getUserByUsername(userService.getLoggedUserUserName());
         Deadline deadline = new Deadline(title, time, description);
         deadline.setUser(user);
-        Set<Group> deadline_groups = new HashSet<>();
-        if (list_of_group_titles.size() > 0) {
-            for (var received_group : list_of_group_titles) {
-                Group group = groupRepository.findGroupByNameAndUserId(received_group, user.getId()).orElseThrow(() ->
-                        new IllegalStateException("Group with name " + received_group + " does not exists"));
-                deadline_groups.add(group);
-                group.getDeadlines().add(deadline);
-            }
-
+        if (!list_of_group_titles.isEmpty()) {
+            add_groups_from_list_of_string(deadline, list_of_group_titles, user);
         }
-        deadline.setGroups(deadline_groups);
-        deadlineRepository.save(deadline);
+        else {
+            deadlineRepository.save(deadline);
+        }
     }
 
     public void deleteDeadline(String title, LocalDateTime time, String description){
@@ -196,70 +111,22 @@ public class DeadlineService {
         }
 
 
-        if (new_list_of_group_titles != null && !new_list_of_group_titles.contains("delete ALL")) {
+        if (new_list_of_group_titles != null && !new_list_of_group_titles.contains("DELETE ALL")) {
             Deadline new_deadline = new Deadline(deadline_to_update.getTitle(), deadline_to_update.getDeadline_time(),
                     deadline_to_update.getDescription());
             new_deadline.setUser(deadline_to_update.getUser());
-            deadlineRepository.deleteById(deadline_to_update.getId());
-
-            Set<Group> deadline_groups = new HashSet<>();
-            for (var received_group : new_list_of_group_titles) {
-                Group group = groupRepository.findGroupByNameAndUserId(received_group, user.getId()).orElseThrow(() ->
-                        new IllegalStateException("Group with name " + received_group + " does not exists"));
-                deadline_groups.add(group);
-                new_deadline.setGroups(deadline_groups);
-            }
+            deadlineRepository.deleteDeadlineById(deadline_to_update.getId());
+            add_groups_from_list_of_string(new_deadline, new_list_of_group_titles, user);
             deadlineRepository.save(new_deadline);
         }
 
-        else if (new_list_of_group_titles.size() == 1 && !new_list_of_group_titles.contains("delete ALL")){
+        else if (new_list_of_group_titles.size() == 1 && new_list_of_group_titles.contains("DELETE ALL")){
             Deadline new_deadline = new Deadline(deadline_to_update.getTitle(), deadline_to_update.getDeadline_time(),
                     deadline_to_update.getDescription());
             new_deadline.setUser(deadline_to_update.getUser());
-            deadlineRepository.deleteById(deadline_to_update.getId());
+            deadlineRepository.deleteDeadlineById(deadline_to_update.getId());
             deadlineRepository.save(new_deadline);
             }
-//            Set<Group> current_deadline_groups = deadline_to_update.getGroups();
-//            List<String> titles_of_groups_to_remove = new ArrayList<>();
-//            if (!current_deadline_groups.isEmpty()) {
-//                for (var current_group : current_deadline_groups) {
-//                    String current_group_title = current_group.getGroup_name();
-//                    if (new_list_of_group_titles.contains(current_group_title)) {
-//                        new_list_of_group_titles.remove(current_group_title);
-//                    }
-//                    else {
-//                        titles_of_groups_to_remove.add(current_group_title);
-//                        new_list_of_group_titles.remove(current_group_title);
-//                    }
-//                }
-//                if (!titles_of_groups_to_remove.isEmpty()) {
-//                    for (var group_title : titles_of_groups_to_remove) {
-//                        Group group = groupRepository.findGroupByNameAndUserId(group_title, user.getId()).orElseThrow(() ->
-//                                new IllegalStateException("Group with name " + group_title + " does not exists"));
-//                        deadline_to_update.getGroups().remove(group);
-//                    }
-//                }
-//                if (!new_list_of_group_titles.isEmpty()) {
-//                    Set<Group> deadline_groups = new HashSet<>();
-//                    for (var received_group : new_list_of_group_titles) {
-//                        Group group = groupRepository.findGroupByNameAndUserId(received_group, user.getId()).orElseThrow(() ->
-//                                new IllegalStateException("Group with name " + received_group + " does not exists"));
-//                        deadline_groups.add(group);
-//                        deadline_to_update.setGroups(deadline_groups);
-//                    }
-//                } else {
-//                    Set<Group> deadline_groups = new HashSet<>();
-//                    for (var received_group : new_list_of_group_titles) {
-//                        Group group = groupRepository.findGroupByNameAndUserId(received_group, user.getId()).orElseThrow(() ->
-//                                new IllegalStateException("Group with name " + received_group + " does not exists"));
-//                        deadline_groups.add(group);
-//                        deadline_to_update.setGroups(deadline_groups);
-//                    }
-//                    deadlineRepository.save(deadline_to_update);
-//
-//                }
-//            }
-
     }
 
 
