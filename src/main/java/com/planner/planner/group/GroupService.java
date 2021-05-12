@@ -3,6 +3,8 @@ package com.planner.planner.group;
 import com.planner.planner.deadline.DeadlineService;
 import com.planner.planner.user.User;
 import com.planner.planner.user.UserService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,5 +97,32 @@ public class GroupService {
             }
             groupRepository.save(group_to_update);
         }
+    }
+
+    public String getGroupDeadlinesandEvents(String group_name){
+        User user = getCurrentUser();
+        String json = null;
+        Optional<Group> groupOptional =
+                groupRepository.findGroupByNameAndUserId(group_name, user.getId());
+        if (!groupOptional.isPresent()){
+            throw new IllegalStateException("Group: '" + group_name + "' does not exist");
+        }
+        else {
+            Group group = groupOptional.get();
+            List<String> group_deadlines_titles = new ArrayList<>();
+            List<String> group_events_titles = new ArrayList<>();
+            for (var event: group.getEvents()) {
+                group_events_titles.add(event.getTitle());
+            }
+            for (var deadline: group.getDeadlines()) {
+                group_deadlines_titles.add(deadline.getTitle());
+            }
+            json = new JSONObject()
+                .put("group_name", group.getGroup_name())
+                .put("events", group_events_titles)
+                .put("deadlines", group_deadlines_titles)
+                .toString();
+        }
+        return json;
     }
 }

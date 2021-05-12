@@ -1,6 +1,8 @@
 package com.planner.planner.group;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,12 @@ public class GroupController {
             user_groups.add(new_group);
         }
         return user_groups;
+    }
+
+    @GetMapping("/deadlines_and_events")
+    public String getUserGroupsandDeadlines(@RequestBody ObjectNode objectNode){
+        String group_name = objectNode.get("group_name").asText();
+        return groupService.getGroupDeadlinesandEvents(group_name);
     }
 
     @PostMapping
