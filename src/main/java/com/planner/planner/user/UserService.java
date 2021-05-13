@@ -1,12 +1,13 @@
 package com.planner.planner.user;
 
+import com.planner.planner.deadline.DeadlineRepository;
+import com.planner.planner.event.EventRepository;
 import com.planner.planner.group.GroupRepository;
 import com.planner.planner.registration.EmailValidator;
 import com.planner.planner.registration.token.ConfirmationToken;
 import com.planner.planner.registration.token.ConfirmationTokenService;
 import com.planner.planner.userProfile.UserProfile;
 import com.planner.planner.userProfile.UserProfileRepository;
-import com.planner.planner.userProfile.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,9 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -36,16 +35,23 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailValidator emailValidator;
+    private final DeadlineRepository deadlineRepository;
+    private final EventRepository eventRepository;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, UserProfileService userProfileService, GroupRepository groupRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailValidator emailValidator) {
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository,
+                       GroupRepository groupRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       ConfirmationTokenService confirmationTokenService, EmailValidator emailValidator,
+                       DeadlineRepository deadlineRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
         this.groupRepository = groupRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.confirmationTokenService = confirmationTokenService;
         this.emailValidator = emailValidator;
+        this.deadlineRepository = deadlineRepository;
+        this.eventRepository = eventRepository;
     }
 
     @Override
@@ -167,6 +173,17 @@ public class UserService implements UserDetailsService {
 //            userRepository.deleteById(userId);
 //        }
 //    }
-
-
+    public void deleteUser() {
+        User user = getCurrentUser();
+        for (var deadline: user.getDeadlines()) {
+            deadlineRepository.deleteDeadlineById(deadline.getId());
+        }
+        for (var event: user.getEvents()) {
+            eventRepository.deleteEventById(event.getId());
+        }
+        for (var group: user.getGroups()) {
+            groupRepository.deleteById(group.getId());
+        }
+        userProfileRepository.deleteById(user.getUser_profile().getId());
+    }
 }

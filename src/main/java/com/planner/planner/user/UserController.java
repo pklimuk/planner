@@ -52,6 +52,10 @@ public class UserController {
         userService.updateUserProfile(new_firstName, new_lastName, new_email, new_dob);
     }
 
+    @DeleteMapping
+    public void deleteUser(){
+        userService.deleteUser();
+    }
 //    @GetMapping
 //    public User simple_func(){
 //        String user_login = userService.getLoggedUserUserName();
