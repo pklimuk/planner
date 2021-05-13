@@ -1,9 +1,9 @@
 package com.planner.planner.group;
 
 import com.planner.planner.deadline.DeadlineService;
+import com.planner.planner.event.EventService;
 import com.planner.planner.user.User;
 import com.planner.planner.user.UserService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,15 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserService userService;
     private final DeadlineService deadlineService;
+    private final EventService eventService;
 
     @Autowired
     public GroupService(GroupRepository groupRepository, UserService userService,
-                        DeadlineService deadlineService) {
+                        DeadlineService deadlineService, EventService eventService) {
         this.groupRepository = groupRepository;
         this.userService = userService;
         this.deadlineService = deadlineService;
+        this.eventService = eventService;
     }
 
     public User getCurrentUser(){
@@ -72,7 +74,19 @@ public class GroupService {
                 }
             }
             if(!group_to_delete.getEvents().isEmpty()){
-                //TODO: Implement this part after full EVENT implementation
+                for (var event: group_to_delete.getEvents()) {
+                    Set<Group> event_groups = event.getGroups();
+                    if (event_groups.remove(group_to_delete)){
+                        List<String> left_groups_titles = new ArrayList<>();
+                        for (var left_group: event_groups) {
+                            left_groups_titles.add(left_group.getGroup_name());
+                        }
+                        eventService.updateEvent(event.getTitle(), event.getStart(), event.getEnd(),
+                                event.getDescription(), null, null, null,
+                                null, left_groups_titles);
+                    }
+                }
+                //TODO: Test group deletion
             }
             groupRepository.deleteById(group_to_delete.getId());
         }
