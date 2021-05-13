@@ -20,11 +20,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Modifying
     @Query("DELETE FROM Users_Events event WHERE event.id =?1")
     void deleteEventById(Long Id);
-
-//    @Transactional
-//    @Modifying
-//    @Query("UPDATE Users_Events SET title = ?2, start = ?3, end = ?4," +
-//            "description = ?5 WHERE Users_Events.id = ?1")
-//    void updateEventById(Long Id, String title, LocalDateTime start, LocalDateTime end,
-//                         String description);
 }
