@@ -32,7 +32,7 @@ public class GroupController {
         return user_groups;
     }
 
-    @GetMapping("/deadlines_and_events")
+    @PostMapping("/deadlines_and_events")
     public String getUserGroupsandDeadlines(@RequestBody ObjectNode objectNode){
         String group_name = objectNode.get("group_name").asText();
         return groupService.getGroupDeadlinesandEvents(group_name);
