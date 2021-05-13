@@ -1,7 +1,7 @@
 package com.planner.planner.user;
 
-import com.planner.planner.group.Group;
 import com.planner.planner.group.GroupRepository;
+import com.planner.planner.registration.EmailValidator;
 import com.planner.planner.registration.token.ConfirmationToken;
 import com.planner.planner.registration.token.ConfirmationTokenService;
 import com.planner.planner.userProfile.UserProfile;
@@ -17,9 +17,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,15 +35,17 @@ public class UserService implements UserDetailsService {
     private final GroupRepository groupRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
+    private final EmailValidator emailValidator;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, UserProfileService userProfileService, GroupRepository groupRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService) {
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, UserProfileService userProfileService, GroupRepository groupRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ConfirmationTokenService confirmationTokenService, EmailValidator emailValidator) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
         this.groupRepository = groupRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.confirmationTokenService = confirmationTokenService;
+        this.emailValidator = emailValidator;
     }
 
     @Override
@@ -110,10 +113,43 @@ public class UserService implements UserDetailsService {
         return userRepository.getOne(userOptional.get().getId());
     }
 
-    public List<Group> getUsersGroups(){
-        User user = getUserByUsername(getLoggedUserUserName());
-        List<Group> users_groups = user.getGroups();
-        return users_groups;
+    public User getCurrentUser(){
+        return getUserByUsername(getLoggedUserUserName());
+    }
+
+    public UserProfile getUserProfile() {
+        User user = getCurrentUser();
+        return user.getUser_profile();
+    }
+
+    @Transactional
+    public void updateUserProfile(String new_firstName, String new_lastName,
+                                  String new_email, LocalDate new_dob){
+        User user = getCurrentUser();
+        UserProfile userProfile = userProfileRepository.findById(user.getId()).orElseThrow(() ->
+                new IllegalStateException("User profile with email " +
+                        user.getUser_profile().getEmail() + " does not exists"));
+        if (new_firstName != null && new_firstName.length() > 0 &&
+                !Objects.equals(userProfile.getFirstName(), new_firstName)) {
+            userProfile.setFirstName(new_firstName);
+        }
+        if (new_lastName != null && new_lastName.length() > 0 &&
+                !Objects.equals(userProfile.getLastName(), new_lastName)) {
+            userProfile.setLastName(new_lastName);
+        }
+        if (new_email != null && new_email.length() > 0 && !Objects.equals(userProfile.getEmail(), new_email)) {
+            Optional<UserProfile> userProfileOptional =
+                    userProfileRepository.findUserProfileByEmail(new_email);
+            if (userProfileOptional.isPresent()){
+                throw new IllegalStateException("This email has been already registered");
+            }
+            else if (emailValidator.test(new_email)){
+                userProfile.setEmail(new_email);
+            }
+        }
+        if (new_dob != null && !Objects.equals(userProfile.getDob(), new_dob)) {
+            userProfile.setDob(new_dob);
+        }
     }
 
     // TODO: Implement Deletion
