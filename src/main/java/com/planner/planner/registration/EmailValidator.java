@@ -8,8 +8,15 @@ import java.util.function.Predicate;
 public class EmailValidator implements Predicate<String> {
 
     @Override
-    public boolean test(String s) {
-//        TODO: Regex to validate email
-        return true;
+    public boolean test(String email) {
+        Boolean email_is_valid = false;
+        if (email.contains("@")){
+            email_is_valid = true;
+        }
+        else{
+            throw new IllegalStateException("This email is invalid");
+        }
+        return email_is_valid;
+//        TODO: Implement better email validation
     }
 }
