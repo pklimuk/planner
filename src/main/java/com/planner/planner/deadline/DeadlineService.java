@@ -30,6 +30,17 @@ public class DeadlineService {
         this.groupRepository = groupRepository;
     }
 
+    public Boolean checkIfDeadlineTimeIsCorrect(LocalDateTime time){
+        Boolean deadline_time_is_correct = false;
+        if (time.isAfter(LocalDateTime.now())){
+            deadline_time_is_correct = true;
+        }
+        else{
+            throw new IllegalStateException("Provided time is not correct");
+        }
+        return deadline_time_is_correct;
+    }
+
     public List<Deadline> getUserDeadlines(){
         User deadline_user = userService.getUserByUsername(userService.getLoggedUserUserName());
         return deadline_user.getDeadlines();
@@ -49,6 +60,7 @@ public class DeadlineService {
 
     public void addNewDeadline(String title, LocalDateTime time, String description, List<String> list_of_group_titles) {
         User user = userService.getUserByUsername(userService.getLoggedUserUserName());
+        checkIfDeadlineTimeIsCorrect(time);
         Deadline deadline = new Deadline(title, time, description);
         deadline.setUser(user);
         if (!list_of_group_titles.isEmpty()) {
@@ -85,6 +97,7 @@ public class DeadlineService {
     public void updateDeadline(String title, LocalDateTime time, String description,
                                String new_title, LocalDateTime new_time,
                                String new_description, List<String> new_list_of_group_titles) {
+        checkIfDeadlineTimeIsCorrect(new_time);
         User user = userService.getUserByUsername(userService.getLoggedUserUserName());
         List<Optional<Deadline>> list_of_deadlines = deadlineRepository.findListOfDeadlineByTitleAndUserId(title, user.getId());
         Deadline deadline_to_update = null;

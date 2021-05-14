@@ -27,6 +27,28 @@ public class EventService {
         this.groupRepository = groupRepository;
     }
 
+    public Boolean checkIfEventTimeIsCorrect(LocalDateTime start_time, LocalDateTime end_time){
+        Boolean event_time_is_correct = false;
+        Boolean start_time_is_correct = false;
+        Boolean end_time_is_correct = false;
+        if (start_time.isAfter(LocalDateTime.now())){
+            start_time_is_correct = true;
+        }
+        else{
+            throw new IllegalStateException("Provided start time is not correct");
+        }
+        if (end_time.isAfter(LocalDateTime.now()) && end_time.isAfter(start_time)){
+            end_time_is_correct = true;
+        }
+        else{
+            throw new IllegalStateException("Provided end time is not correct");
+        }
+        if(start_time_is_correct && end_time_is_correct){
+            event_time_is_correct = true;
+        }
+        return event_time_is_correct;
+    }
+
     public User getCurrentUser(){
         return userService.getUserByUsername(userService.getLoggedUserUserName());
     }
@@ -52,6 +74,7 @@ public class EventService {
 
     public void addNewEvent(String title, LocalDateTime start, LocalDateTime end,
                             String description, List<String> list_of_group_titles){
+        checkIfEventTimeIsCorrect(start, end);
         User user = getCurrentUser();
         Event event = new Event(title, start, end, description);
         event.setUser(user);
@@ -92,6 +115,7 @@ public class EventService {
                             String description, String new_title, LocalDateTime new_start,
                             LocalDateTime new_end, String new_description,
                             List<String> new_list_of_group_titles) {
+        checkIfEventTimeIsCorrect(new_start, new_end);
         User user = getCurrentUser();
         List<Optional<Event>> list_of_events = eventRepository.findListOfEventsByTitleAndUserId(title, user.getId());
         Event event_to_update = null;
