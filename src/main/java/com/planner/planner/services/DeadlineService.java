@@ -97,7 +97,6 @@ public class DeadlineService {
     public void updateDeadline(String title, LocalDateTime time, String description,
                                String new_title, LocalDateTime new_time,
                                String new_description, List<String> new_list_of_group_titles) {
-        checkIfDeadlineTimeIsCorrect(new_time);
         User user = userService.getUserByUsername(userService.getLoggedUserUserName());
         List<Optional<Deadline>> list_of_deadlines = deadlineRepository.findListOfDeadlineByTitleAndUserId(title, user.getId());
         Deadline deadline_to_update = null;
@@ -117,6 +116,7 @@ public class DeadlineService {
             deadline_to_update.setTitle(new_title);
         }
         if (new_time != null && !Objects.equals(deadline_to_update.getDeadline_time(), new_time)) {
+            checkIfDeadlineTimeIsCorrect(new_time);
             deadline_to_update.setDeadline_time(new_time);
         }
         if (new_description != null && !Objects.equals(deadline_to_update.getDescription(), new_description)) {

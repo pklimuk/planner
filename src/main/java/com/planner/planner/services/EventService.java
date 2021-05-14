@@ -48,6 +48,17 @@ public class EventService {
         }
         return event_time_is_correct;
     }
+//    public Boolean checkIfStartTimeIsCorrect(LocalDateTime start_time){
+//        boolean start_time_is_correct = false;
+//        if (start_time.isAfter(LocalDateTime.now())){
+//            start_time_is_correct = true;
+//        }
+//        else{
+//            throw new IllegalStateException("Provided start time is not correct");
+//        }
+//        return start_time_is_correct;
+//    }
+
 
     public User getCurrentUser(){
         return userService.getUserByUsername(userService.getLoggedUserUserName());
@@ -115,7 +126,6 @@ public class EventService {
                             String description, String new_title, LocalDateTime new_start,
                             LocalDateTime new_end, String new_description,
                             List<String> new_list_of_group_titles) {
-        checkIfEventTimeIsCorrect(new_start, new_end);
         User user = getCurrentUser();
         List<Optional<Event>> list_of_events = eventRepository.findListOfEventsByTitleAndUserId(title, user.getId());
         Event event_to_update = null;
@@ -137,9 +147,11 @@ public class EventService {
             event_to_update.setTitle(new_title);
         }
         if (new_start != null && !Objects.equals(event_to_update.getStart(), new_start)) {
+            checkIfEventTimeIsCorrect(new_start, event_to_update.getEnd());
             event_to_update.setStart(new_start);
         }
         if (new_end != null && !Objects.equals(event_to_update.getEnd(), new_end)) {
+            checkIfEventTimeIsCorrect(event_to_update.getStart(), new_end);
             event_to_update.setEnd(new_end);
         }
         if (new_description != null && !Objects.equals(event_to_update.getDescription(), new_description)) {
