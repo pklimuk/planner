@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -37,6 +38,7 @@ public class UserService implements UserDetailsService {
     private final EmailValidator emailValidator;
     private final DeadlineRepository deadlineRepository;
     private final EventRepository eventRepository;
+    private final Integer minimal_user_age = 6;
 
 
     @Autowired
@@ -63,6 +65,14 @@ public class UserService implements UserDetailsService {
                                 String.format(USER_NOT_FOUND_MSG, login)));
     }
 
+    public Boolean userAgeIsCorrect(LocalDate dob){
+        Boolean user_age_is_correct = false;
+        if (ChronoUnit.YEARS.between(dob, LocalDate.now()) > minimal_user_age){
+            user_age_is_correct = true;
+        }
+        return user_age_is_correct;
+    }
+
 
     public String signUpUser(String firstName, String lastName, String email, LocalDate dob,
                              String login, String password, UserRole userRole) {
@@ -75,7 +85,11 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("This email has been already registered");
         } else if (userOptional.isPresent()) {
             throw new IllegalStateException("The user with such login has been already registered");
-        } else {
+        }
+        if (!userAgeIsCorrect(dob)){
+            throw new IllegalStateException("You must be at least " + minimal_user_age + " years old to use this app");
+        }
+        else {
             String encodedPassword = bCryptPasswordEncoder
                     .encode(password);
             UserProfile userProfile = new UserProfile(firstName, lastName, email, dob);
@@ -153,26 +167,14 @@ public class UserService implements UserDetailsService {
                 userProfile.setEmail(new_email);
             }
         }
-        if (new_dob != null && !Objects.equals(userProfile.getDob(), new_dob)) {
+        if (!userAgeIsCorrect(new_dob)){
+            throw new IllegalStateException("You must be at least " + minimal_user_age + " years old to use this app");
+        }
+        else if (new_dob != null && !Objects.equals(userProfile.getDob(), new_dob)) {
             userProfile.setDob(new_dob);
         }
     }
 
-    // TODO: Implement Deletion
-
-//    public void deleteUser(Long userId) {
-//        boolean exists = userRepository.existsById(userId);
-//        if (!exists) {
-//            throw new IllegalStateException("User with Id " + userId + " does not exists");
-//        }
-//        else {
-////            User user = userRepository.getOne(userId);
-////            List<Event> user_events = user.getEvents();
-////            List<Deadline> user_deadlines = user.getDeadlines();
-//
-//            userRepository.deleteById(userId);
-//        }
-//    }
     public void deleteUser() {
         User user = getCurrentUser();
         for (var deadline: user.getDeadlines()) {
