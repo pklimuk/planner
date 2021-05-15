@@ -54,9 +54,4 @@ public class UserController {
     public void deleteUser(){
         userService.deleteUser();
     }
-//    @GetMapping
-//    public User simple_func(){
-//        String user_login = userService.getLoggedUserUserName();
-//        return userService.getUserByUsername(user_login);
-//    }
 }

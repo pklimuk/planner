@@ -30,18 +30,17 @@ public class DeadlineService {
         this.groupRepository = groupRepository;
     }
 
-    public Boolean checkIfDeadlineTimeIsCorrect(LocalDateTime time){
+    public Boolean checkIfDeadlineTimeIsCorrect(LocalDateTime time) {
         boolean deadline_time_is_correct = false;
-        if (time.isAfter(LocalDateTime.now())){
+        if (time.isAfter(LocalDateTime.now())) {
             deadline_time_is_correct = true;
-        }
-        else{
+        } else {
             throw new IllegalStateException("Provided time is not correct");
         }
         return deadline_time_is_correct;
     }
 
-    public List<Deadline> getUserDeadlines(){
+    public List<Deadline> getUserDeadlines() {
         User deadline_user = userService.getUserByUsername(userService.getLoggedUserUserName());
         return deadline_user.getDeadlines();
     }
@@ -65,21 +64,20 @@ public class DeadlineService {
         deadline.setUser(user);
         if (!list_of_group_titles.isEmpty()) {
             add_groups_from_list_of_string(deadline, list_of_group_titles, user);
-        }
-        else {
+        } else {
             deadlineRepository.save(deadline);
         }
     }
 
-    public void deleteDeadline(String title, LocalDateTime time, String description){
+    public void deleteDeadline(String title, LocalDateTime time, String description) {
         User user = userService.getUserByUsername(userService.getLoggedUserUserName());
         List<Optional<Deadline>> list_of_deadlines = deadlineRepository.findListOfDeadlineByTitleAndUserId(title, user.getId());
         try {
-            if(list_of_deadlines.size() == 1) {
+            if (list_of_deadlines.size() == 1) {
                 deadlineRepository.deleteById(list_of_deadlines.get(0).get().getId());
             }
-            if(list_of_deadlines.size() > 1) {
-                for (var deadline: list_of_deadlines) {
+            if (list_of_deadlines.size() > 1) {
+                for (var deadline : list_of_deadlines) {
                     if (Objects.equals(deadline.get().getDeadline_time(), time)
                             & Objects.equals(deadline.get().getDescription(), description)) {
                         deadlineRepository.deleteById(list_of_deadlines.get(0).get().getId());
@@ -87,8 +85,7 @@ public class DeadlineService {
                     }
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("Can not delete deadline with title: " + title);
         }
     }
@@ -131,37 +128,12 @@ public class DeadlineService {
             deadlineRepository.deleteDeadlineById(deadline_to_update.getId());
             add_groups_from_list_of_string(new_deadline, new_list_of_group_titles, user);
             deadlineRepository.save(new_deadline);
-        }
-
-        else if (new_list_of_group_titles.size() == 1 && new_list_of_group_titles.contains("CLEAR ALL")){
+        } else if (new_list_of_group_titles.size() == 1 && new_list_of_group_titles.contains("CLEAR ALL")) {
             Deadline new_deadline = new Deadline(deadline_to_update.getTitle(), deadline_to_update.getDeadline_time(),
                     deadline_to_update.getDescription());
             new_deadline.setUser(deadline_to_update.getUser());
             deadlineRepository.deleteDeadlineById(deadline_to_update.getId());
             deadlineRepository.save(new_deadline);
-            }
-    }
-
-
-    // TODO: Delete test_func()
-//    public List<Optional<Deadline>> test_func(String title){
-//        return deadlineRepository.findListOfDeadlineByTitle(title);
-//    }
-
-
-    public void test_func_2(String group_name, String group_description){
-        User my_user = userService.getUserByUsername(userService.getLoggedUserUserName());
-        Group user_group = new Group(group_name, group_description);
-        my_user.addGroup(user_group);
-        groupRepository.save(user_group);
-        userRepository.save(my_user);
-    }
-
-    public void test_func_3(){
-        User my_user = userService.getUserByUsername(userService.getLoggedUserUserName());
-        List<Deadline> user_deadlines = my_user.getDeadlines();
-        user_deadlines.get(0).setGroups(new HashSet<>());
-        deadlineRepository.save(user_deadlines.get(0));
-        userRepository.save(my_user);
+        }
     }
 }

@@ -48,17 +48,6 @@ public class EventService {
         }
         return event_time_is_correct;
     }
-//    public Boolean checkIfStartTimeIsCorrect(LocalDateTime start_time){
-//        boolean start_time_is_correct = false;
-//        if (start_time.isAfter(LocalDateTime.now())){
-//            start_time_is_correct = true;
-//        }
-//        else{
-//            throw new IllegalStateException("Provided start time is not correct");
-//        }
-//        return start_time_is_correct;
-//    }
-
 
     public User getCurrentUser(){
         return userService.getUserByUsername(userService.getLoggedUserUserName());

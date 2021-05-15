@@ -140,8 +140,6 @@ public class Group {
                 '}';
     }
 
-    // TODO: Check after deadline PUT tests
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

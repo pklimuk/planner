@@ -22,38 +22,6 @@ public class DeadlineController {
         this.deadlineService = deadlineService;
     }
 
-//    @PostMapping
-//    public void addNewUser(@RequestBody ObjectNode objectNode) {
-//        String firstName = objectNode.get("firstName").asText();
-//        String lastName = objectNode.get("lastName").asText();
-
-
-//    @GetMapping("/test")
-//    public List<Deadline> test_func(String title){
-//        List<Deadline> user_deadlines = new ArrayList<>();
-//        for (var deadline: deadlineService.test_func("Second deadline")){
-//            Deadline new_deadline = new Deadline();
-//            new_deadline.setId(deadline.get().getId());
-//            new_deadline.setTitle(deadline.get().getTitle());
-//            new_deadline.setDeadline_time(deadline.get().getDeadline_time());
-//            new_deadline.setDescription(deadline.get().getDescription());
-//            new_deadline.setGroups(deadline.get().getGroups());
-//            user_deadlines.add(new_deadline);
-//        }
-//        return user_deadlines;
-//    }
-
-    @GetMapping("/test")
-    public void test_func2(@RequestBody ObjectNode objectNode){
-        String title = objectNode.get("title").asText();
-        String description = objectNode.get("description").asText();
-        deadlineService.test_func_2(title, description);
-    }
-
-    @GetMapping("/test3")
-    public void test_func3(){
-        deadlineService.test_func_3();
-    }
 
     @DeleteMapping
     public void deleteDeadline(@RequestBody ObjectNode objectNode){
@@ -84,7 +52,6 @@ public class DeadlineController {
 
     @PostMapping
     public void addNewDeadline(@RequestBody ObjectNode objectNode) {
-//        String title = objectNode, LocalDateTime time, String description, List<String> list_of_group_titles
         String title = objectNode.get("title").asText();
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
         String description = objectNode.get("description").asText();
@@ -101,7 +68,6 @@ public class DeadlineController {
 
     @PutMapping
     public void updateDeadline(@RequestBody ObjectNode objectNode) {
-
         String title = objectNode.get("title").asText();
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
         String description = objectNode.get("description").asText();

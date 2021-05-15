@@ -39,7 +39,7 @@ public class EventController {
         }
         return user_events;
     }
-//    TODO: Implement null checking in description(in Deadline too)
+
     @PostMapping
     public void addNewEvent(@RequestBody ObjectNode objectNode){
         String title = objectNode.get("title").asText();
