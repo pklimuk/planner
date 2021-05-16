@@ -20,6 +20,7 @@ public class DeadlineService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private Boolean EnableTimeChecking = false;
 
     @Autowired
     public DeadlineService(DeadlineRepository deadlineRepository, UserService userService,
@@ -59,7 +60,9 @@ public class DeadlineService {
 
     public void addNewDeadline(String title, LocalDateTime time, String description, List<String> list_of_group_titles) {
         User user = userService.getUserByUsername(userService.getLoggedUserUserName());
-        checkIfDeadlineTimeIsCorrect(time);
+        if (EnableTimeChecking) {
+            checkIfDeadlineTimeIsCorrect(time);
+        }
         Deadline deadline = new Deadline(title, time, description);
         deadline.setUser(user);
         if (!list_of_group_titles.isEmpty()) {
@@ -113,7 +116,9 @@ public class DeadlineService {
             deadline_to_update.setTitle(new_title);
         }
         if (new_time != null && !Objects.equals(deadline_to_update.getDeadline_time(), new_time)) {
-            checkIfDeadlineTimeIsCorrect(new_time);
+            if (EnableTimeChecking) {
+                checkIfDeadlineTimeIsCorrect(new_time);
+            }
             deadline_to_update.setDeadline_time(new_time);
         }
         if (new_description != null && !Objects.equals(deadline_to_update.getDescription(), new_description)) {

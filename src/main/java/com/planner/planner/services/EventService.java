@@ -18,7 +18,6 @@ public class EventService {
     private final UserService userService;
     private final GroupRepository groupRepository;
 
-
     @Autowired
     public EventService(EventRepository eventRepository, UserService userService,
                         GroupRepository groupRepository) {
@@ -29,21 +28,14 @@ public class EventService {
 
     public Boolean checkIfEventTimeIsCorrect(LocalDateTime start_time, LocalDateTime end_time){
         boolean event_time_is_correct = false;
-        boolean start_time_is_correct = false;
         boolean end_time_is_correct = false;
-        if (start_time.isAfter(LocalDateTime.now())){
-            start_time_is_correct = true;
-        }
-        else{
-            throw new IllegalStateException("Provided start time is not correct");
-        }
-        if (end_time.isAfter(LocalDateTime.now()) && end_time.isAfter(start_time)){
+        if (end_time.isAfter(start_time)){
             end_time_is_correct = true;
         }
         else{
-            throw new IllegalStateException("Provided end time is not correct");
+            throw new IllegalStateException("Provided time is not correct");
         }
-        if(start_time_is_correct && end_time_is_correct){
+        if(end_time_is_correct){
             event_time_is_correct = true;
         }
         return event_time_is_correct;
