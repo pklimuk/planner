@@ -1,6 +1,5 @@
 package com.planner.planner.models;
 
-import com.planner.planner.models.User;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -59,6 +58,12 @@ public class UserProfile {
     )
     private LocalDate dob;
 
+    @Column(
+            name = "profile_image",
+            length = 1000
+    )
+    private byte[] profileImage;
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(
             mappedBy = "user_profile",
@@ -115,6 +120,14 @@ public class UserProfile {
 
     public void setDob(LocalDate dob) {
         this.dob = dob;
+    }
+
+    public byte[] getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(byte[] newProfileImage) {
+        profileImage = newProfileImage;
     }
 
     @Override

@@ -20,7 +20,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -43,11 +48,21 @@ public class UserService implements UserDetailsService {
     private final Integer minimal_user_age = 6;
 
 
+    public byte[] getDefaultProfileImage() throws IOException {
+        String path = new File("src/main/resources/images/default-user-image.jpg").getAbsolutePath();
+        BufferedImage bImage = ImageIO.read(new File(path));
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, "jpg", bos );
+        return bos.toByteArray();
+    }
+
+    private final byte[] defaultProfileImage = getDefaultProfileImage();
+
     @Autowired
     public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository,
                        GroupRepository groupRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
                        ConfirmationTokenService confirmationTokenService, EmailValidator emailValidator,
-                       DeadlineRepository deadlineRepository, EventRepository eventRepository) {
+                       DeadlineRepository deadlineRepository, EventRepository eventRepository) throws IOException {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
         this.groupRepository = groupRepository;
@@ -95,6 +110,7 @@ public class UserService implements UserDetailsService {
             String encodedPassword = bCryptPasswordEncoder
                     .encode(password);
             UserProfile userProfile = new UserProfile(firstName, lastName, email, dob);
+            userProfile.setProfileImage(defaultProfileImage);
             User user = new User(login, encodedPassword, userRole, userProfile);
             userRepository.save(user);
 
@@ -186,5 +202,11 @@ public class UserService implements UserDetailsService {
             groupRepository.deleteById(group.getId());
         }
         userProfileRepository.deleteById(user.getUser_profile().getId());
+    }
+
+    public void updateProfileImage(byte[] image){
+        User user = getCurrentUser();
+        user.getUser_profile().setProfileImage(image);
+        userRepository.save(user);
     }
 }

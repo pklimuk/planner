@@ -5,8 +5,12 @@ import com.planner.planner.services.UserService;
 import com.planner.planner.models.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.time.LocalDate;
+
 
 
 @RestController
@@ -26,6 +30,7 @@ public class UserController {
         UserProfile userProfile = userService.getUserProfile();
         UserProfile new_user_profile = new UserProfile(userProfile.getFirstName(),
                 userProfile.getLastName(), userProfile.getEmail(), userProfile.getDob());
+        new_user_profile.setProfileImage(userProfile.getProfileImage());
         return new_user_profile;
     }
 
@@ -48,6 +53,11 @@ public class UserController {
             new_dob = LocalDate.parse(objectNode.get("new_dob").asText());
         }
         userService.updateUserProfile(new_firstName, new_lastName, new_email, new_dob);
+    }
+
+    @PutMapping("userprofile/update_image")
+    public void updateProfileImage(@RequestBody MultipartFile profile_image) throws IOException {
+        userService.updateProfileImage(profile_image.getBytes());
     }
 
     @DeleteMapping
