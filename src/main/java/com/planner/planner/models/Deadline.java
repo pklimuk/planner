@@ -81,13 +81,6 @@ public class Deadline {
         this.description = description;
     }
 
-    public Deadline(String title, LocalDateTime deadline_time, String description, Set<Group> groups) {
-        this.title = title;
-        this.deadline_time = deadline_time;
-        this.description = description;
-        this.groups = groups;
-    }
-
     public User getUser() {
         return deadline_user;
     }

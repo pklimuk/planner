@@ -135,8 +135,7 @@ public class UserService implements UserDetailsService {
     public String getLoggedUserUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String currentUserName = authentication.getName();
-            return currentUserName;
+            return authentication.getName();
         }
         else{
             return "There is no logged in user";
