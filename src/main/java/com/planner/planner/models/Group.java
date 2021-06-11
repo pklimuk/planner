@@ -1,13 +1,18 @@
 package com.planner.planner.models;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity(name = "Groups")
 @Table(
         name = "groups"
@@ -58,9 +63,6 @@ public class Group {
             inverseJoinColumns = @JoinColumn(name = "deadline_id", nullable = false, updatable = false))
     private Set<Deadline> deadlines = new HashSet<>();
 
-    public Group() {
-    }
-
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne
     @JoinColumn(
@@ -82,74 +84,11 @@ public class Group {
         this.group_description = group_description;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getGroup_name() {
-        return group_name;
-    }
-
-    public void setGroup_name(String group_name) {
-        this.group_name = group_name;
-    }
-
-    public String getGroup_description() {
-        return group_description;
-    }
-
-    public void setGroup_description(String group_description) {
-        this.group_description = group_description;
-    }
-
-    public Set<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(Set<Event> events) {
-        this.events = events;
-    }
-
-    public Set<Deadline> getDeadlines() {
-        return deadlines;
-    }
-
-    public void setDeadlines(Set<Deadline> deadlines) {
-        this.deadlines = deadlines;
-    }
-
     public User getUser() {
         return group_user;
     }
 
     public void setUser(User group_user) {
         this.group_user = group_user;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Group{" +
-                "id=" + id +
-                ", group_name='" + group_name + '\'' +
-                ", group_description='" + group_description + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return Objects.equals(id, group.id) && Objects.equals(group_name, group.group_name) && Objects.equals(group_description, group.group_description) && Objects.equals(events, group.events) && Objects.equals(deadlines, group.deadlines) && Objects.equals(group_user, group.group_user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, group_name, group_description, events, deadlines, group_user);
     }
 }

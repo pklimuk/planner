@@ -2,6 +2,7 @@ package com.planner.planner.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -18,6 +19,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity(name = "Users")
 @Table(
         name = "users",
@@ -120,9 +122,6 @@ public class User implements UserDetails {
         this.userRole = userRole;
     }
 
-    public User() {
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
@@ -158,101 +157,5 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return login;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void addEvent(Event event) {
-        if (!this.events.contains(event)) {
-            this.events.add(event);
-            event.setUser(this);
-        }
-    }
-
-    public void removeEvent(Event event) {
-        if (this.events.contains(event)) {
-            this.events.remove(event);
-            event.setUser(null);
-        }
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void addDeadline(Deadline deadline) {
-        if (!this.deadlines.contains(deadline)) {
-            this.deadlines.add(deadline);
-            deadline.setUser(this);
-        }
-    }
-
-    public void removeDeadline(Deadline deadline) {
-        if (this.deadlines.contains(deadline)) {
-            this.deadlines.remove(deadline);
-            deadline.setUser(null);
-        }
-    }
-
-    public UserProfile getUser_profile() {
-        return user_profile;
-    }
-
-    public void setUser_profile(UserProfile user_profile) {
-        this.user_profile = user_profile;
-    }
-
-    public List<Deadline> getDeadlines() {
-        return deadlines;
-    }
-
-    public void addGroup(Group group) {
-        if (!this.groups.contains(group)) {
-            this.groups.add(group);
-            group.setUser(this);
-        }
-    }
-
-    public void removeGroup(Group group) {
-        if (this.groups.contains(groups)) {
-            this.groups.remove(group);
-            group.setUser(null);
-        }
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", userProfile=" + user_profile +
-                '}';
     }
 }

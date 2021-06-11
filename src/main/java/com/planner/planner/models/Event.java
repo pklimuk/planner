@@ -1,5 +1,8 @@
 package com.planner.planner.models;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -8,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity(name = "Users_Events")
 @Table(
         name = "users_events"
@@ -75,53 +81,10 @@ public class Event {
     @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
 
-    public Event() {
-    }
-
     public Event(String title, LocalDateTime start, LocalDateTime end, String description) {
         this.title = title;
         this.start = start;
         this.end = end;
-        this.description = description;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
-
-    public LocalDateTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -131,25 +94,5 @@ public class Event {
 
     public void setUser(User event_user) {
         this.event_user = event_user;
-    }
-
-    public Set<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<Group> groups) {
-        this.groups = groups;
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", start=" + start +
-                ", end=" + end +
-                ", description='" + description + '\'' +
-                ", event_user=" + event_user +
-                '}';
     }
 }

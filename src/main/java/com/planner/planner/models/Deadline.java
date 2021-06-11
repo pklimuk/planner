@@ -1,5 +1,8 @@
 package com.planner.planner.models;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity(name = "Users_Deadlines")
 @Table(
         name = "users_deadlines"
@@ -69,10 +75,6 @@ public class Deadline {
     @ManyToMany(mappedBy = "deadlines", fetch = FetchType.LAZY)
     private Set<Group> groups = new HashSet<>();
 
-
-    public Deadline() {
-    }
-
     public Deadline(String title, LocalDateTime deadline_time, String description) {
         this.title = title;
         this.deadline_time = deadline_time;
@@ -86,62 +88,11 @@ public class Deadline {
         this.groups = groups;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDateTime getDeadline_time() {
-        return deadline_time;
-    }
-
-    public void setDeadline_time(LocalDateTime deadline_time) {
-        this.deadline_time = deadline_time;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public User getUser() {
         return deadline_user;
     }
 
     public void setUser(User deadline_user) {
         this.deadline_user = deadline_user;
-    }
-
-    public Set<Group> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<Group> groups) {
-        this.groups = groups;
-    }
-
-    @Override
-    public String toString() {
-        return "Deadline{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", deadline_time=" + deadline_time +
-                ", description='" + description + '\'' +
-                ", deadline_user=" + deadline_user +
-                '}';
     }
 }
