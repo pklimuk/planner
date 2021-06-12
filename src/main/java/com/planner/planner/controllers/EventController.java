@@ -23,42 +23,42 @@ public class EventController {
     }
 
     @GetMapping
-    public List<Event> getUserEvents(){
-        List<Event> user_events = new ArrayList<>();
+    public List<Event> getUserEvents() {
+        List<Event> userEvents = new ArrayList<>();
         for (var event: eventService.getUserEvents()) {
-            Event new_event = new Event();
-            new_event.setTitle(event.getTitle());
-            new_event.setStart(event.getStart());
-            new_event.setEnd(event.getEnd());
-            new_event.setDescription(event.getDescription());
+            Event newEvent = new Event();
+            newEvent.setTitle(event.getTitle());
+            newEvent.setStart(event.getStart());
+            newEvent.setEnd(event.getEnd());
+            newEvent.setDescription(event.getDescription());
             for (var group: event.getGroups()) {
-                Group new_group = new Group(group.getGroup_name(), group.getGroup_description());
-                new_event.getGroups().add(new_group);
+                Group newGroup = new Group(group.getGroup_name(), group.getGroup_description());
+                newEvent.getGroups().add(newGroup);
             }
-            user_events.add(new_event);
+            userEvents.add(newEvent);
         }
-        return user_events;
+        return userEvents;
     }
 
     @PostMapping
-    public void addNewEvent(@RequestBody ObjectNode objectNode){
+    public void addNewEvent(@RequestBody ObjectNode objectNode) {
         String title = objectNode.get("title").asText();
         LocalDateTime start = LocalDateTime.parse(objectNode.get("start").asText());
         LocalDateTime end = LocalDateTime.parse(objectNode.get("end").asText());
         String description = objectNode.get("description").asText();
-        List<String> list_of_group_titles = new ArrayList<>();
+        List<String> listOfGroupTitles = new ArrayList<>();
         if (objectNode.get("groups") != null) {
             Integer i = 0;
             while (i < objectNode.get("groups").size()) {
-                list_of_group_titles.add(objectNode.get("groups").get(i).asText());
+                listOfGroupTitles.add(objectNode.get("groups").get(i).asText());
                 i += 1;
             }
         }
-        eventService.addNewEvent(title, start, end, description, list_of_group_titles);
+        eventService.addNewEvent(title, start, end, description, listOfGroupTitles);
     }
 
     @DeleteMapping
-    public void deleteEvent(@RequestBody ObjectNode objectNode){
+    public void deleteEvent(@RequestBody ObjectNode objectNode) {
         String title = objectNode.get("title").asText();
         LocalDateTime start = LocalDateTime.parse(objectNode.get("start").asText());
         LocalDateTime end = LocalDateTime.parse(objectNode.get("end").asText());
@@ -72,31 +72,31 @@ public class EventController {
         LocalDateTime start = LocalDateTime.parse(objectNode.get("start").asText());
         LocalDateTime end = LocalDateTime.parse(objectNode.get("end").asText());
         String description = objectNode.get("description").asText();
-        String new_title = null;
-        LocalDateTime new_start = null;
-        LocalDateTime new_end = null;
-        String new_description = null;
-        List<String> new_list_of_group_titles = new ArrayList<>();
-        if (objectNode.get("new_title") != null){
-            new_title = objectNode.get("new_title").asText();
+        String newTitle = null;
+        LocalDateTime newStart = null;
+        LocalDateTime newEnd = null;
+        String newDescription = null;
+        List<String> newListOfGroupTitles = new ArrayList<>();
+        if (objectNode.get("new_title") != null) {
+            newTitle = objectNode.get("new_title").asText();
         }
-        if (objectNode.get("new_start") != null){
-            new_start = LocalDateTime.parse(objectNode.get("new_start").asText());
+        if (objectNode.get("new_start") != null) {
+            newStart = LocalDateTime.parse(objectNode.get("new_start").asText());
         }
-        if (objectNode.get("new_end") != null){
-            new_end = LocalDateTime.parse(objectNode.get("new_end").asText());
+        if (objectNode.get("new_end") != null) {
+            newEnd = LocalDateTime.parse(objectNode.get("new_end").asText());
         }
-        if (objectNode.get("new_description") != null){
-            new_description = objectNode.get("new_description").asText();
+        if (objectNode.get("new_description") != null) {
+            newDescription = objectNode.get("new_description").asText();
         }
-        if (objectNode.get("new_groups") != null){
+        if (objectNode.get("new_groups") != null) {
             Integer i = 0;
             while (i < objectNode.get("new_groups").size()) {
-                new_list_of_group_titles.add(objectNode.get("new_groups").get(i).asText());
+                newListOfGroupTitles.add(objectNode.get("new_groups").get(i).asText());
                 i += 1;
             }
         }
-        eventService.updateEvent(title, start, end, description, new_title,
-                new_start, new_end, new_description, new_list_of_group_titles);
+        eventService.updateEvent(title, start, end, description, newTitle,
+                newStart, newEnd, newDescription, newListOfGroupTitles);
     }
 }

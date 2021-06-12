@@ -45,14 +45,14 @@ public class UserService implements UserDetailsService {
     private final EmailValidator emailValidator;
     private final DeadlineRepository deadlineRepository;
     private final EventRepository eventRepository;
-    private final Integer minimal_user_age = 6;
+    private final Integer minimalUserAge = 6;
 
 
     public byte[] getDefaultProfileImage() throws IOException {
         String path = new File("src/main/resources/images/default-user-image.jpg").getAbsolutePath();
         BufferedImage bImage = ImageIO.read(new File(path));
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(bImage, "jpg", bos );
+        ImageIO.write(bImage, "jpg", bos);
         return bos.toByteArray();
     }
 
@@ -82,12 +82,12 @@ public class UserService implements UserDetailsService {
                                 String.format(USER_NOT_FOUND_MSG, login)));
     }
 
-    public Boolean userAgeIsCorrect(LocalDate dob){
-        boolean user_age_is_correct = false;
-        if (ChronoUnit.YEARS.between(dob, LocalDate.now()) > minimal_user_age){
-            user_age_is_correct = true;
+    public Boolean userAgeIsCorrect(LocalDate dob) {
+        boolean userAgeIsCorrect = false;
+        if (ChronoUnit.YEARS.between(dob, LocalDate.now()) > minimalUserAge) {
+            userAgeIsCorrect = true;
         }
-        return user_age_is_correct;
+        return userAgeIsCorrect;
     }
 
 
@@ -103,8 +103,8 @@ public class UserService implements UserDetailsService {
         } else if (userOptional.isPresent()) {
             throw new IllegalStateException("The user with such login has been already registered");
         }
-        if (!userAgeIsCorrect(dob)){
-            throw new IllegalStateException("You must be at least " + minimal_user_age + " years old to use this app");
+        if (!userAgeIsCorrect(dob)) {
+            throw new IllegalStateException("You must be at least " + minimalUserAge + " years old to use this app");
         }
         else {
             String encodedPassword = bCryptPasswordEncoder
@@ -137,17 +137,17 @@ public class UserService implements UserDetailsService {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication.getName();
         }
-        else{
+        else {
             return "There is no logged in user";
         }
     }
 
-    public User getUserByUsername(String login){
+    public User getUserByUsername(String login) {
         Optional<User> userOptional = userRepository.findUserByLogin(login);
         return userRepository.getOne(userOptional.get().getId());
     }
 
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         return getUserByUsername(getLoggedUserUserName());
     }
 
@@ -157,35 +157,35 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateUserProfile(String new_firstName, String new_lastName,
-                                  String new_email, LocalDate new_dob){
+    public void updateUserProfile(String newFirstName, String newLastName,
+                                  String newEmail, LocalDate newDob) {
         User user = getCurrentUser();
         UserProfile userProfile = userProfileRepository.findById(user.getId()).orElseThrow(() ->
                 new IllegalStateException("User profile with email " +
                         user.getUser_profile().getEmail() + " does not exists"));
-        if (new_firstName != null && new_firstName.length() > 0 &&
-                !Objects.equals(userProfile.getFirstName(), new_firstName)) {
-            userProfile.setFirstName(new_firstName);
+        if (newFirstName != null && newFirstName.length() > 0
+                && !Objects.equals(userProfile.getFirstName(), newFirstName)) {
+            userProfile.setFirstName(newFirstName);
         }
-        if (new_lastName != null && new_lastName.length() > 0 &&
-                !Objects.equals(userProfile.getLastName(), new_lastName)) {
-            userProfile.setLastName(new_lastName);
+        if (newLastName != null && newLastName.length() > 0
+                && !Objects.equals(userProfile.getLastName(), newLastName)) {
+            userProfile.setLastName(newLastName);
         }
-        if (new_email != null && new_email.length() > 0 && !Objects.equals(userProfile.getEmail(), new_email)) {
+        if (newEmail != null && newEmail.length() > 0 && !Objects.equals(userProfile.getEmail(), newEmail)) {
             Optional<UserProfile> userProfileOptional =
-                    userProfileRepository.findUserProfileByEmail(new_email);
-            if (userProfileOptional.isPresent()){
+                    userProfileRepository.findUserProfileByEmail(newEmail);
+            if (userProfileOptional.isPresent()) {
                 throw new IllegalStateException("This email has been already registered");
             }
-            else if (emailValidator.test(new_email)){
-                userProfile.setEmail(new_email);
+            else if (emailValidator.test(newEmail)) {
+                userProfile.setEmail(newEmail);
             }
         }
-        if (!userAgeIsCorrect(new_dob)){
-            throw new IllegalStateException("You must be at least " + minimal_user_age + " years old to use this app");
+        if (!userAgeIsCorrect(newDob)) {
+            throw new IllegalStateException("You must be at least " + minimalUserAge + " years old to use this app");
         }
-        else if (new_dob != null && !Objects.equals(userProfile.getDob(), new_dob)) {
-            userProfile.setDob(new_dob);
+        else if (newDob != null && !Objects.equals(userProfile.getDob(), newDob)) {
+            userProfile.setDob(newDob);
         }
     }
 
@@ -203,7 +203,7 @@ public class UserService implements UserDetailsService {
         userProfileRepository.deleteById(user.getUser_profile().getId());
     }
 
-    public void updateProfileImage(byte[] image){
+    public void updateProfileImage(byte[] image) {
         User user = getCurrentUser();
         user.getUser_profile().setProfileImage(image);
         userRepository.save(user);

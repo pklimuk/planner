@@ -27,21 +27,21 @@ public class GroupService {
         this.eventService = eventService;
     }
 
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         return userService.getUserByUsername(userService.getLoggedUserUserName());
     }
 
-    public List<Group> getUserGroups(){
-        User group_user = getCurrentUser();
-        return group_user.getGroups();
+    public List<Group> getUserGroups() {
+        User groupUser = getCurrentUser();
+        return groupUser.getGroups();
     }
 
-    public void addNewGroup(Group group){
+    public void addNewGroup(Group group) {
         User user = getCurrentUser();
         group.setUser(user);
         Optional<Group> groupOptional =
                 groupRepository.findGroupByNameAndUserId(group.getGroup_name(), user.getId());
-        if (groupOptional.isPresent()){
+        if (groupOptional.isPresent()) {
             throw new IllegalStateException("Group: '" + group.getGroup_name() + "' has been already registered");
         }
         else {
@@ -49,90 +49,90 @@ public class GroupService {
         }
     }
 
-    public void deleteGroup(String name){
+    public void deleteGroup(String name) {
         User user = getCurrentUser();
         Optional<Group> groupOptional =
                 groupRepository.findGroupByNameAndUserId(name, user.getId());
-        if (!groupOptional.isPresent()){
+        if (!groupOptional.isPresent()) {
             throw new IllegalStateException("Group: '" + name + "' does not exist");
         }
         else {
-            Group group_to_delete = groupOptional.get();
-            if(!group_to_delete.getDeadlines().isEmpty()){
-                for (var deadline: group_to_delete.getDeadlines()) {
-                    Set<Group> deadline_groups = deadline.getGroups();
-                    if (deadline_groups.remove(group_to_delete)){
-                        List<String> left_groups_titles = new ArrayList<>();
-                        for (var left_group: deadline_groups) {
-                            left_groups_titles.add(left_group.getGroup_name());
+            Group groupToDelete = groupOptional.get();
+            if (!groupToDelete.getDeadlines().isEmpty()) {
+                for (var deadline: groupToDelete.getDeadlines()) {
+                    Set<Group> deadlineGroups = deadline.getGroups();
+                    if (deadlineGroups.remove(groupToDelete)){
+                        List<String> leftGroupsTitles = new ArrayList<>();
+                        for (var leftGroup: deadlineGroups) {
+                            leftGroupsTitles.add(leftGroup.getGroup_name());
                         }
-                        deadlineService.updateDeadline(deadline.getTitle(),deadline.getDeadline_time(),
+                        deadlineService.updateDeadline(deadline.getTitle(), deadline.getDeadline_time(),
                                 deadline.getDescription(), null, null, null,
-                                left_groups_titles);
+                                leftGroupsTitles);
                     }
                 }
             }
-            if(!group_to_delete.getEvents().isEmpty()){
-                for (var event: group_to_delete.getEvents()) {
-                    Set<Group> event_groups = event.getGroups();
-                    if (event_groups.remove(group_to_delete)){
-                        List<String> left_groups_titles = new ArrayList<>();
-                        for (var left_group: event_groups) {
-                            left_groups_titles.add(left_group.getGroup_name());
+            if (!groupToDelete.getEvents().isEmpty()) {
+                for (var event: groupToDelete.getEvents()) {
+                    Set<Group> eventGroups = event.getGroups();
+                    if (eventGroups.remove(groupToDelete)) {
+                        List<String> leftGroupsTitles = new ArrayList<>();
+                        for (var leftGroup: eventGroups) {
+                            leftGroupsTitles.add(leftGroup.getGroup_name());
                         }
                         eventService.updateEvent(event.getTitle(), event.getStart(), event.getEnd(),
                                 event.getDescription(), null, null, null,
-                                null, left_groups_titles);
+                                null, leftGroupsTitles);
                     }
                 }
             }
-            groupRepository.deleteById(group_to_delete.getId());
+            groupRepository.deleteById(groupToDelete.getId());
         }
     }
     @Transactional
-    public void updateGroup(String name, String new_name, String new_description){
+    public void updateGroup(String name, String newName, String newDescription) {
         User user = getCurrentUser();
         Optional<Group> groupOptional =
                 groupRepository.findGroupByNameAndUserId(name, user.getId());
-        if (!groupOptional.isPresent()){
+        if (!groupOptional.isPresent()) {
             throw new IllegalStateException("Group: '" + name + "' does not exist");
         }
         else {
-            Group group_to_update = groupOptional.get();
-            if (new_name != null && new_name.length() > 0 &&
-                    !Objects.equals(group_to_update.getGroup_name(), new_name)) {
-                group_to_update.setGroup_name(new_name);
+            Group groupToUpdate = groupOptional.get();
+            if (newName != null && newName.length() > 0
+                   && !Objects.equals(groupToUpdate.getGroup_name(), newName)) {
+                groupToUpdate.setGroup_name(newName);
             }
-            if (new_description != null && new_description.length() > 0 &&
-                    !Objects.equals(group_to_update.getGroup_description(), new_description)) {
-                group_to_update.setGroup_description(new_description);
+            if (newDescription != null && newDescription.length() > 0
+                    && !Objects.equals(groupToUpdate.getGroup_description(), newDescription)) {
+                groupToUpdate.setGroup_description(newDescription);
             }
-            groupRepository.save(group_to_update);
+            groupRepository.save(groupToUpdate);
         }
     }
 
-    public String getGroupDeadlinesandEvents(String group_name){
+    public String getGroupDeadlinesandEvents(String groupName) {
         User user = getCurrentUser();
         String json = null;
         Optional<Group> groupOptional =
-                groupRepository.findGroupByNameAndUserId(group_name, user.getId());
-        if (!groupOptional.isPresent()){
-            throw new IllegalStateException("Group: '" + group_name + "' does not exist");
+                groupRepository.findGroupByNameAndUserId(groupName, user.getId());
+        if (!groupOptional.isPresent()) {
+            throw new IllegalStateException("Group: '" + groupName + "' does not exist");
         }
         else {
             Group group = groupOptional.get();
-            List<String> group_deadlines_titles = new ArrayList<>();
-            List<String> group_events_titles = new ArrayList<>();
+            List<String> groupDeadlinesTitles = new ArrayList<>();
+            List<String> groupEventsTitles = new ArrayList<>();
             for (var event: group.getEvents()) {
-                group_events_titles.add(event.getTitle());
+                groupEventsTitles.add(event.getTitle());
             }
             for (var deadline: group.getDeadlines()) {
-                group_deadlines_titles.add(deadline.getTitle());
+                groupDeadlinesTitles.add(deadline.getTitle());
             }
             json = new JSONObject()
-                .put("group_name", group.getGroup_name())
-                .put("events", group_events_titles)
-                .put("deadlines", group_deadlines_titles)
+                .put("groupName", group.getGroup_name())
+                .put("events", groupEventsTitles)
+                .put("deadlines", groupDeadlinesTitles)
                 .toString();
         }
         return json;

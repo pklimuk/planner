@@ -10,10 +10,10 @@ public class EmailValidator implements Predicate<String> {
     @Override
     public boolean test(String email) {
         boolean email_is_valid = false;
-        if (email.contains("@")){
+        if (email.contains("@")) {
             email_is_valid = true;
         }
-        else{
+        else {
             throw new IllegalStateException("This email is invalid");
         }
         return email_is_valid;

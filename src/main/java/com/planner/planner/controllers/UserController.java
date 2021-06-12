@@ -26,33 +26,33 @@ public class UserController {
 
 
     @GetMapping("/userprofile")
-    public UserProfile getUserProfile(){
+    public UserProfile getUserProfile() {
         UserProfile userProfile = userService.getUserProfile();
-        UserProfile new_user_profile = new UserProfile(userProfile.getFirstName(),
+        UserProfile newUserProfile = new UserProfile(userProfile.getFirstName(),
                 userProfile.getLastName(), userProfile.getEmail(), userProfile.getDob());
-        new_user_profile.setProfileImage(userProfile.getProfileImage());
-        return new_user_profile;
+        newUserProfile.setProfileImage(userProfile.getProfileImage());
+        return newUserProfile;
     }
 
     @PutMapping("/userprofile")
-    public void updateUserProfile(@RequestBody ObjectNode objectNode){
-        String new_firstName = null;
-        String new_lastName = null;
-        String new_email = null;
-        LocalDate new_dob = null;
-        if (objectNode.get("new_firstName") != null){
-            new_firstName = objectNode.get("new_firstName").asText();
+    public void updateUserProfile(@RequestBody ObjectNode objectNode) {
+        String newFirstName = null;
+        String newLastName = null;
+        String newEmail = null;
+        LocalDate newDob = null;
+        if (objectNode.get("new_firstName") != null) {
+            newFirstName = objectNode.get("new_firstName").asText();
         }
-        if (objectNode.get("new_lastName") != null){
-            new_lastName = objectNode.get("new_lastName").asText();
+        if (objectNode.get("new_lastName") != null) {
+            newLastName = objectNode.get("new_lastName").asText();
         }
-        if (objectNode.get("new_email") != null){
-            new_email = objectNode.get("new_email").asText();
+        if (objectNode.get("new_email") != null) {
+            newEmail = objectNode.get("new_email").asText();
         }
-        if (objectNode.get("new_dob") != null){
-            new_dob = LocalDate.parse(objectNode.get("new_dob").asText());
+        if (objectNode.get("new_dob") != null) {
+            newDob = LocalDate.parse(objectNode.get("new_dob").asText());
         }
-        userService.updateUserProfile(new_firstName, new_lastName, new_email, new_dob);
+        userService.updateUserProfile(newFirstName, newLastName, newEmail, newDob);
     }
 
     @PutMapping("userprofile/update_image")
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public void deleteUser(){
+    public void deleteUser() {
         userService.deleteUser();
     }
 }

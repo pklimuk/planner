@@ -24,7 +24,7 @@ public class DeadlineController {
 
 
     @DeleteMapping
-    public void deleteDeadline(@RequestBody ObjectNode objectNode){
+    public void deleteDeadline(@RequestBody ObjectNode objectNode) {
 
         String title = objectNode.get("title").asText();
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
@@ -33,21 +33,21 @@ public class DeadlineController {
     }
 
     @GetMapping
-    public List<Deadline> getUserDeadlines(){
-        List<Deadline> user_deadlines = new ArrayList<>();
+    public List<Deadline> getUserDeadlines() {
+        List<Deadline> userDeadlines = new ArrayList<>();
         for (var deadline: deadlineService.getUserDeadlines()){
-            Deadline new_deadline = new Deadline();
-                new_deadline.setTitle(deadline.getTitle());
-                new_deadline.setDeadline_time(deadline.getDeadline_time());
-                new_deadline.setDescription(deadline.getDescription());
+            Deadline newDeadline = new Deadline();
+                newDeadline.setTitle(deadline.getTitle());
+                newDeadline.setDeadline_time(deadline.getDeadline_time());
+                newDeadline.setDescription(deadline.getDescription());
                 for (var group: deadline.getGroups()){
-                    Group new_group = new Group(group.getGroup_name(), group.getGroup_description());
-                    new_deadline.getGroups().add(new_group);
+                    Group newGroup = new Group(group.getGroup_name(), group.getGroup_description());
+                    newDeadline.getGroups().add(newGroup);
                 }
-            user_deadlines.add(new_deadline);
+            userDeadlines.add(newDeadline);
         }
 
-        return user_deadlines;
+        return userDeadlines;
     }
 
     @PostMapping
@@ -55,15 +55,15 @@ public class DeadlineController {
         String title = objectNode.get("title").asText();
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
         String description = objectNode.get("description").asText();
-        List<String> list_of_group_titles = new ArrayList<>();
+        List<String> listOfGroupTitles = new ArrayList<>();
         if (objectNode.get("groups") != null) {
             Integer i = 0;
             while (i < objectNode.get("groups").size()) {
-                list_of_group_titles.add(objectNode.get("groups").get(i).asText());
+                listOfGroupTitles.add(objectNode.get("groups").get(i).asText());
                 i += 1;
             }
         }
-        deadlineService.addNewDeadline(title, time, description, list_of_group_titles);
+        deadlineService.addNewDeadline(title, time, description, listOfGroupTitles);
     }
 
     @PutMapping
@@ -71,27 +71,27 @@ public class DeadlineController {
         String title = objectNode.get("title").asText();
         LocalDateTime time = LocalDateTime.parse(objectNode.get("deadline_time").asText());
         String description = objectNode.get("description").asText();
-        String new_title = null;
-        LocalDateTime new_time = null;
-        String new_description = null;
-        List<String> new_list_of_group_titles = new ArrayList<>();
-        if (objectNode.get("new_title") != null){
-            new_title = objectNode.get("new_title").asText();
+        String newTitle = null;
+        LocalDateTime newTime = null;
+        String newDescription = null;
+        List<String> newListOfGroupTitles = new ArrayList<>();
+        if (objectNode.get("new_title") != null) {
+            newTitle = objectNode.get("new_title").asText();
         }
-        if (objectNode.get("new_time") != null){
-            new_time = LocalDateTime.parse(objectNode.get("new_time").asText());
+        if (objectNode.get("new_time") != null) {
+            newTime = LocalDateTime.parse(objectNode.get("new_time").asText());
         }
-        if (objectNode.get("new_description") != null){
-            new_description = objectNode.get("new_description").asText();
+        if (objectNode.get("new_description") != null) {
+            newDescription = objectNode.get("new_description").asText();
         }
-        if (objectNode.get("new_groups") != null){
+        if (objectNode.get("new_groups") != null) {
             Integer i = 0;
             while (i < objectNode.get("new_groups").size()) {
-                new_list_of_group_titles.add(objectNode.get("new_groups").get(i).asText());
+                newListOfGroupTitles.add(objectNode.get("new_groups").get(i).asText());
                 i += 1;
             }
         }
         deadlineService.updateDeadline(title, time, description,
-                new_title, new_time, new_description, new_list_of_group_titles);
+                newTitle, newTime, newDescription, newListOfGroupTitles);
     }
 }

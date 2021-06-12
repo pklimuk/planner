@@ -21,45 +21,45 @@ public class GroupController {
     }
 
     @GetMapping
-    public List<Group> getUserGroups(){
-        List<Group> user_groups = new ArrayList<>();
+    public List<Group> getUserGroups() {
+        List<Group> userGroups = new ArrayList<>();
         for (var group: groupService.getUserGroups()) {
-            Group new_group = new Group();
-            new_group.setGroup_name(group.getGroup_name());
-            new_group.setGroup_description(group.getGroup_description());
-            user_groups.add(new_group);
+            Group newGroup = new Group();
+            newGroup.setGroup_name(group.getGroup_name());
+            newGroup.setGroup_description(group.getGroup_description());
+            userGroups.add(newGroup);
         }
-        return user_groups;
+        return userGroups;
     }
 
     @PostMapping("/deadlines_and_events")
-    public String getUserGroupsandDeadlines(@RequestBody ObjectNode objectNode){
-        String group_name = objectNode.get("group_name").asText();
-        return groupService.getGroupDeadlinesandEvents(group_name);
+    public String getUserGroupsandDeadlines(@RequestBody ObjectNode objectNode) {
+        String groupName = objectNode.get("group_name").asText();
+        return groupService.getGroupDeadlinesandEvents(groupName);
     }
 
     @PostMapping
-    public void addNewGroup(@RequestBody Group group){
+    public void addNewGroup(@RequestBody Group group) {
         groupService.addNewGroup(group);
     }
 
     @DeleteMapping
-    public void deleteGroup(@RequestBody ObjectNode objectNode){
-        String group_name = objectNode.get("group_name").asText();
-        groupService.deleteGroup(group_name);
+    public void deleteGroup(@RequestBody ObjectNode objectNode) {
+        String groupName = objectNode.get("group_name").asText();
+        groupService.deleteGroup(groupName);
     }
 
     @PutMapping
-    public void updateGroup(@RequestBody ObjectNode objectNode){
-        String group_name = objectNode.get("group_name").asText();
-        String new_group_name = null;
-        String new_group_description = null;
-        if (objectNode.get("new_group_name") != null){
-            new_group_name = objectNode.get("new_group_name").asText();
+    public void updateGroup(@RequestBody ObjectNode objectNode) {
+        String groupName = objectNode.get("group_name").asText();
+        String newGroupName = null;
+        String newGroupDescription = null;
+        if (objectNode.get("new_group_name") != null) {
+            newGroupName = objectNode.get("new_group_name").asText();
         }
-        if (objectNode.get("new_group_description") != null){
-            new_group_description = objectNode.get("new_group_description").asText();
+        if (objectNode.get("new_group_description") != null) {
+            newGroupDescription = objectNode.get("new_group_description").asText();
         }
-        groupService.updateGroup(group_name, new_group_name, new_group_description);
+        groupService.updateGroup(groupName, newGroupName, newGroupDescription);
     }
 }
