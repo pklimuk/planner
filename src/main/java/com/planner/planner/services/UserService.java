@@ -11,6 +11,7 @@ import com.planner.planner.repositories.UserRepository;
 import com.planner.planner.models.UserProfile;
 import com.planner.planner.repositories.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,9 +24,8 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -49,8 +49,8 @@ public class UserService implements UserDetailsService {
 
 
     public byte[] getDefaultProfileImage() throws IOException {
-        String path = new File("src/main/resources/images/default-user-image.jpg").getAbsolutePath();
-        BufferedImage bImage = ImageIO.read(new File(path));
+        URL fileURL = ResourceLoader.class.getResource("/images/default-user-image.jpg");
+        BufferedImage bImage = ImageIO.read(fileURL.openStream());
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ImageIO.write(bImage, "jpg", bos);
         return bos.toByteArray();
