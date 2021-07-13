@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    password: 123
-    url: jdbc:postgresql://localhost:5432/planner
-    username: planner
+    password: 1b75f65023308845eee9dd01bf7415c523de2b7d9237c5ca5dd2def045d1db7c
+    url: jdbc:postgresql://ec2-52-208-221-89.eu-west-1.compute.amazonaws.com:5432/d8o1i33eokk1hd
+    username: cznksvbbjgvfaw
   jpa:
     hibernate:
       ddl-auto: update
