@@ -62,8 +62,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole userRole = UserRole.USER;
     private Boolean locked = false;
-//    enabled changes to true after email verification
-    private Boolean enabled = false;
+//    If email verification is turned on - enabled should be false, and changes to true after verification
+    private Boolean enabled = true;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(cascade = CascadeType.ALL)
