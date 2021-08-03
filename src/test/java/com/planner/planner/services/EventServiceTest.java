@@ -1,9 +1,7 @@
-package com.planner.planner;
+package com.planner.planner.services;
 
 import com.planner.planner.repositories.EventRepository;
 import com.planner.planner.repositories.GroupRepository;
-import com.planner.planner.services.EventService;
-import com.planner.planner.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {
@@ -27,12 +27,15 @@ class EventServiceTest {
     }
 
     @Test
-    void CheckDateIsCorrect(){
+    void CheckIfDateIsCorrect(){
+        //given
         LocalDateTime start = LocalDateTime.now().plusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(5);
 
+        //when
         Boolean result = underTest.checkIfEventTimeIsCorrect(start, end);
 
-        assert result.equals(true);
+        //then
+        assertThat(result).isTrue();
     }
 }
