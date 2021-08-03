@@ -36,6 +36,7 @@ public class UserService implements UserDetailsService {
 
     private final static String USER_NOT_FOUND_MSG =
             "user with login %s not found";
+    private final static int MINIMAL_USER_AGE = 6;
 
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
@@ -45,8 +46,6 @@ public class UserService implements UserDetailsService {
     private final EmailValidator emailValidator;
     private final DeadlineRepository deadlineRepository;
     private final EventRepository eventRepository;
-    private final Integer minimalUserAge = 6;
-
 
     public byte[] getDefaultProfileImage() throws IOException {
         URL fileURL = ResourceLoader.class.getResource("/images/default-user-image.jpg");
@@ -84,7 +83,7 @@ public class UserService implements UserDetailsService {
 
     public Boolean userAgeIsCorrect(LocalDate dob) {
         boolean userAgeIsCorrect = false;
-        if (ChronoUnit.YEARS.between(dob, LocalDate.now()) > minimalUserAge) {
+        if (ChronoUnit.YEARS.between(dob, LocalDate.now()) > MINIMAL_USER_AGE) {
             userAgeIsCorrect = true;
         }
         return userAgeIsCorrect;
@@ -104,7 +103,7 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("The user with such login has been already registered");
         }
         if (!userAgeIsCorrect(dob)) {
-            throw new IllegalStateException("You must be at least " + minimalUserAge + " years old to use this app");
+            throw new IllegalStateException("You must be at least " + MINIMAL_USER_AGE + " years old to use this app");
         }
         else {
             String encodedPassword = bCryptPasswordEncoder
@@ -182,7 +181,7 @@ public class UserService implements UserDetailsService {
             }
         }
         if (!userAgeIsCorrect(newDob)) {
-            throw new IllegalStateException("You must be at least " + minimalUserAge + " years old to use this app");
+            throw new IllegalStateException("You must be at least " + MINIMAL_USER_AGE + " years old to use this app");
         }
         else if (newDob != null && !Objects.equals(userProfile.getDob(), newDob)) {
             userProfile.setDob(newDob);
