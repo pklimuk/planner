@@ -1,4 +1,5 @@
-# Planner - web-application for managing your plans
+# Planner
+# Web-application for storing scheduled events, projects, setting meeting dates, adding deadlines to existing projects
 ## Authors: Pavel Klimuk(branch main), Stanislau Stankevich(branch frontend)
 ### Database: **PostgreSQL**
 ### Backend: **Spring Boot**, **Spring Security**, **JWT**
