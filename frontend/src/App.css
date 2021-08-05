@@ -1,0 +1,564 @@
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  min-width: 1000px;
+  margin: auto;
+  display: grid;
+}
+
+h1 {
+  margin: 0;
+  font-size: 40px;
+  margin-bottom: 30px;
+}
+
+header {
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+header .far{
+  font-size: 80px;
+  height: fit-content;
+  color: #1a4fa5;
+}
+
+nav .links a {
+  text-decoration: none;
+  color: black;
+  border: 3px solid #1f5ec4;
+  border-radius: 1em;
+  width: 150px;
+  text-align: center;
+  font-size: large;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav .links a:visited {
+  text-decoration: none;
+  color: black;
+}
+
+nav .links a:hover{
+  background-color: #1f5ec486;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease 0s;
+}
+
+nav {
+  width: 800px;
+}
+
+.logout-delete-holder {
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+}
+
+button.logout,
+button.delete,
+button.edit,
+button.plus,
+button.plus-calendar {
+  background-color: white;
+  color: black;
+  border: 3px solid #1f5ec4;
+  border-radius: 1em;
+  font-size: 15px;
+  padding: 0.5rem;
+}
+
+button.add {
+  background-color: white;
+  color: black;
+  border: 3px solid #1f5ec4;
+  border-radius: 1em;
+  font-size: 15px;
+  padding: 5px;
+  width: 100px;
+}
+
+button.plus-calendar {
+  width: 40px;
+}
+
+button.logout:hover,
+button.delete:hover,
+button.edit:hover,
+button.plus:hover,
+.adding-group button:hover {
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s linear;
+}
+
+button.plus-calendar:hover {
+  width: 40px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s linear;
+  width: 50px;
+}
+
+button.add:hover {
+  transition: all 0.2s ease 0s;
+  background-color: #1f5ec486;
+  color: white;
+  font-weight: 500;
+  padding: 8px;
+}
+
+button.plus:hover {
+  background-color: #1f5ec486;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease 0s;
+}
+
+button.plus {
+  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+  align-self: center;
+  
+}
+
+button.edit:hover {
+  background-color: #1f5ec4b2;
+  border-color: white;
+}
+
+button.logout:hover {
+  background-color: #c4901f86;
+  border-color: #c4901f;
+}
+
+button.delete:hover {
+  background-color: #c41f1f86;
+  border-color: #c41f1f;
+}
+
+.links {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+
+}
+
+.links li a p {
+  margin: 0;
+}
+
+.home-page {
+  display: flex;
+  width: 800px;
+  justify-self: center;
+}
+
+.home-page article h1 {
+  margin: 0;
+  font-size: 40px;
+}
+
+.home-page article p {
+  line-height: 1.6;
+}
+
+.home-page .far {
+  font-size: 300px;
+  margin-left: 30px ;
+  color: #1f5ec4;
+}
+
+.calendar-page {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas: 
+    "title title"
+    "calendar calendar"
+    "prev-button next-button"
+  ;
+  margin: auto;
+  width: 800px;
+  margin-bottom: 100px;
+}
+
+.calendar-page .title {
+  grid-area: title;
+}
+
+.calendar {
+  grid-area: calendar;
+  width: fit-content;
+  margin: auto;
+  position: relative;
+}
+
+.table-calendar {
+  width: fit-content;
+}
+
+.month-name {
+  float: left;
+}
+
+.year-name {
+  float: right;
+}
+
+.day-holder {
+  position: relative;
+}
+
+.day {
+  width: 100px;
+  height: 100px;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 0.5em;
+  font-size: large;
+}
+
+.null-day {
+  border-color: rgba(128, 128, 128, 0.288);
+}
+
+.this-month-day {
+  border-color:  #1a4fa5;
+}
+
+.today {
+  background-color: #1f5ec486;
+  border-color:  #1a4fa5;
+  color: white;
+}
+
+.other-day {
+  border-color:  #1f5ec442;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.selected-day {
+  background-color: #1a4fa5;
+  color: white;
+}
+
+.day > p , .today > p, .other-day > p {
+  margin: 0;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.day:hover {
+  cursor: pointer;
+}
+
+.non-selected-day:hover {
+  background-color: #1f5ec45e;
+}
+
+.day-properties {
+  position: absolute;
+  text-align: center;
+  width: 250px;
+  left: -75px;
+  bottom: 90px;
+  background-color: white;
+  color: black;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 10px;
+  z-index: 10;
+  box-shadow: 0 0 40px grey;
+}
+
+.week-days {
+  text-align: center;
+}
+
+.weekend {
+  color: #1f5ec4;
+}
+
+button.changemonth {
+  width: 150px;
+  height: 60px;
+  font-size: 30px;
+  border-radius: 10px;
+  margin-top: 20px;
+  border: 3px solid #1a4fa5;
+  background-color: white;
+}
+
+button.changemonth.next {
+  grid-area: next-button;
+  justify-self: flex-end;
+}
+
+button.changemonth.prev {
+ grid-area: prev-button;
+ justify-self: flex-start;
+}
+
+button:hover {
+  background-color: #1f5ec45e;
+  cursor: pointer;
+}
+
+button:active {
+  background-color: #1a4fa5;
+  color: white;
+}
+
+.userslist-page {
+  width: 800px;
+  justify-self: center;
+}
+
+.userslist {
+  width: 700px;
+  margin: auto;
+  margin-top: 30px;
+  border: 3px solid #1a4fa5;
+  border-radius: 1em;
+}
+
+.create-user-page {
+  width: 800px;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-form {
+  align-self: center;
+  width: fit-content;
+  font-size: large;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-form input {
+  border: 2px solid #1a4fa5;
+  border-radius: 1em;
+  height: 30px;
+  width: 250px;
+}
+
+.custom-form textarea {
+  border: 2px solid #1a4fa5;
+  border-radius: 1em;
+  width: 250px;
+}
+
+.custom-form input[type=text],
+.custom-form input[type=email],
+.custom-form input[type=date],
+.custom-form input[type=datetime-local],
+.custom-form input[type=password],
+.custom-form textarea {
+  padding: 0 10px;
+  margin-left: 20px;
+  margin-bottom: 3px;
+}
+
+.custom-form input[value="0000-00-00"]::-webkit-datetime-edit {
+  color: transparent; 
+}
+
+.custom-form input[type=submit] {
+  margin-top: 20px;
+  font-size: large;
+  height: 35px;
+  color: white;
+  background: #1f5ec4;
+  border: 3px solid #1f5ec4;
+  width: 200px;
+}
+
+.custom-form input[type=submit]:hover {
+  background: #357cda;
+  border-color: #357cda;
+  transition: all 0.2s ease 0s;
+  cursor: pointer;
+}
+
+
+.custom-form input[type=submit]:disabled {
+  background: rgb(160, 160, 160);
+  border-color: rgb(160, 160, 160);
+}
+
+input[type=date][value=""]::-webkit-datetime-edit{ color: transparent; }
+input[type=datetime-local][value=""]::-webkit-datetime-edit{ color: transparent; }
+
+input[type=date]:focus::-webkit-datetime-edit{ color: black; }
+
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+.deadlines,
+.events,
+.groups {
+  display: flex;
+  justify-content: center;
+}
+
+p.no-data {
+  text-align: center;
+}
+
+.deadlines-list,
+.events-list,
+.groups-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.deadlines-list table,
+.events-list table,
+.groups-list table {
+  border-collapse: collapse;
+}
+
+.deadlines-list th,
+.events-list th,
+.groups-list th {
+  text-align: start;
+  padding: 10px;
+}
+
+col.deadline-event-title {
+  width: 150px;
+}
+
+col.deadline-event-time {
+  width: 200px;
+}
+
+col.deadline-event-to-do {
+  width: 200px;
+}
+
+col.deadline-event-groups {
+  width: 150px;
+}
+
+.deadlines-list td,
+.events-list td,
+.groups-list td {
+  padding: 10px;
+}
+
+.deadlines-list tr:nth-child(odd),
+.events-list tr:nth-child(odd),
+.groups-list tr:nth-child(odd) {
+  background: #1f5ec442;
+}
+
+.custom-form button,
+.deadlines button,
+.events button,
+.groups button {
+  border: 3px solid #1a4fa5;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.added-groups {
+  width: 250px;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.added-groups button.delete{
+  padding: 5px;
+  height: fit-content;
+}
+
+.custom-form .adding-group {
+  width: 250px;
+  margin-left: 20px;
+  display: flex;
+}
+
+.custom-form .adding-group input {
+  margin: 0;
+}
+
+.custom-form .adding-group button.add {
+  margin-left: 10px;
+  color: black
+}
+
+.custom-form .adding-group button.add:hover {
+  background-color: #1f5ec486;
+  color: white;
+}
+
+.custom-form .adding-group button.plus {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+
+.custom-form .adding-group input[type=text] {
+  width: fit-content;
+}
+
+.add-new {
+  margin-left: 20px;
+}
+
+.calendar-adding-event-deadline {
+  padding: 50px;
+  position: absolute;
+  background: white;
+  z-index: 20;
+  left: 120px;
+  border-radius: 30px;
+  box-shadow: 0 0 100px grey; 
+}
+
+.add-to-day-options {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.upload-image-button {
+  background-color: white;
+}
+
+ul.dropdown-menu.show {
+  border: 0;
+  background: none;
+}
+
+ul.dropdown-menu.show li {
+  padding-bottom: 5px;
+}
