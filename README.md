@@ -1,4 +1,4 @@
-# Planner
+# Planner - https://planner-planner.herokuapp.com
 # Web-application for storing scheduled events, projects, setting meeting dates, adding deadlines to existing projects
 ## Authors: Pavel Klimuk(backend), Stanislau Stankevich(frontend)
 ### Database: **PostgreSQL**
